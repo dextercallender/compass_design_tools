@@ -4,7 +4,6 @@
   LAYOUT
   - Grid (Square)
   - Circle
-  - Line
   - Triangle
   - Pentagon. Hexagon, etc.
 */
@@ -28,45 +27,46 @@
 
 let cnv;
 
-let colors;
-
 let dots = [];
 
-gridWidth = 2;		// in # of dots
-gridHeight = 2;		// in # of dots
-gridSpacing = 20;
-circleIncrements = 6;
-lineWidth = 4;
-lineSpacing = 20;
-// TODO triangle
+grid = 'GRID';
+circle = 'CIRCLE';
+triangle = 'TRIANGLE';
+
+let Config = function() {
+	this.layout = 'GRID';
+	this.gridWidth = 2;		// Width = # of dots
+	this.gridHeight = 2;
+	this.gridSpacing = 20;
+	this.circleIncrements = 6;
+	this.triangleEdgeLength = 3;
+}
+
+let config = new Config();
 
 function setup() {
 	createCanvas(400, 400);
 
-	colors = new Color();
-
 	initializeGrid();
 
-	console.log(dots);
-
 	var gui = new dat.GUI();
-	gui.add(colors, 'g', 0, 255);
+	gui.add(config, 'layout', ['GRID', 'CIRCLE', 'LINE'] );
+	gui.remember(config);
 }
 
 function draw() {
 	cnv = createCanvas(windowWidth, windowHeight)
   cnv.parent('dot-tool-canvas');
 
+	push();
+	translate(windowWidth/2, windowHeight/2);
 	for (let i = 0; i < dots.length; i++ ) {
 		dots[i].render();
 	}
-
-	fill(colors.r, colors.g, colors.b);
-	ellipse(20, 20, 20, 20);
+	pop();
 }
 
 class Dot {
-
 	constructor(position) {
 		this.position = position;
 		this.size = 15;
@@ -87,20 +87,13 @@ class Dot {
 	render() {
 		ellipse(this.position.x, this.position.y, this.size, this.size);
 	}
-
-}
-
-function Color() {
-  this.r = 255;
-  this.g = 100;
-  this.b = 255;
 }
 
 function initializeGrid() {
 	dots = [];
-	for (let y = 0; y < gridHeight; y++) {
-		for (let x = 0; x < gridWidth; x++) {
-			dots.push(new Dot(new p5.Vector(x * gridSpacing, y * gridSpacing)));
+	for (let y = 0; y < config.gridHeight; y++) {
+		for (let x = 0; x < config.gridWidth; x++) {
+			dots.push(new Dot(new p5.Vector(x * config.gridSpacing, y * config.gridSpacing)));
 		}
 	}
 }
@@ -109,10 +102,10 @@ function initializeCircle() {
 
 }
 
-function initializeLine() {
+function intializeTriangle() {
 
 }
 
-function intializeTriangle() {
-
+function windowResized() {
+  resizeCanvas(windowWidth, windowHeight);
 }
