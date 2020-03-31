@@ -54,9 +54,15 @@ function setup() {
 
 	var gui = new dat.GUI();
 	gui.add(config, 'fill', [BLACK, WHITE]);
-	gui.add(config, 'layout', [GRID, CIRCLE, TRIANGLE] ).onChange(renderConfig);
+	gui.add(config, 'layout', [GRID, CIRCLE, TRIANGLE] ).onChange(reinitializeConfig);
 	var f1 = gui.addFolder('Grid');
-	f1.add(config, 'gridWidth', 1, 50);
+	f1.add(config, 'gridWidth', 1, 25).onChange(reinitializeConfig);
+	f1.add(config, 'gridHeight', 1, 25).onChange(reinitializeConfig);
+	f1.add(config, 'gridSpacing', 15, 200).onChange(reinitializeConfig);
+	var f2 = gui.addFolder('Circle');
+	f2.add(config, 'circleRadius', 10, 200).onChange(reinitializeConfig);
+	f2.add(config, 'circleIncrements', 3, 20).onChange(reinitializeConfig);	// TODO : fix & limit based on radius
+	var f3 = gui.addFolder('Triangle');
 
 	gui.remember(config);
 }
@@ -65,18 +71,9 @@ function draw() {
 	cnv = createCanvas(windowWidth, windowHeight)
   cnv.parent('dot-tool-canvas');
 
-	if (config.fill === BLACK) {
-		fill(0);
-	} else {
-		fill(255);
-	}
+	if (config.fill === BLACK) { fill(0); }
 
-	push();
-	translate(windowWidth/2, windowHeight/2);
-	for (let i = 0; i < dots.length; i++ ) {
-		dots[i].render();
-	}
-	pop();
+	renderCentered();
 }
 
 class Dot {
@@ -124,7 +121,7 @@ function intializeTriangle() {
 	console.log('Should initialize triangle');
 }
 
-function renderConfig() {
+function reinitializeConfig() {
 	switch(config.layout) {
 		case GRID:
 			initializeGrid();
@@ -134,6 +131,28 @@ function renderConfig() {
 			break;
 		case TRIANGLE:
 			intializeTriangle();
+			break;
+	}
+}
+
+function renderCentered() {
+	switch(config.layout) {
+		case GRID:
+			pixelWidth = (config.gridWidth - 1) * config.gridSpacing;
+			pixelHeight = (config.gridHeight - 1) * config.gridSpacing;
+			push();
+			translate(windowWidth/2 - pixelWidth/2, windowHeight/2 - pixelHeight/2);
+			for (let i = 0; i < dots.length; i++ ) { dots[i].render(); }
+			pop();
+			break;
+		case CIRCLE:
+			push();
+			translate(windowWidth/2, windowHeight/2);
+			for (let i = 0; i < dots.length; i++ ) { dots[i].render(); }
+			pop();
+			break;
+		case TRIANGLE:
+
 			break;
 	}
 }
