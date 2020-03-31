@@ -1,22 +1,26 @@
 <html>
   <head>
     <title>Compass Pattern Tools</title>
-    <script src="p5.min.js"></script>
-    <script src="p5.touchgui.js"></script>
-    <script src="needle.js"></script>
+    <script type="text/javascript" src="lib/p5.min.js"></script>
+    <script type="text/javascript" src="lib/dat.gui.min.js"></script>
+    <script type="text/javascript" src="lib/jquery-3.4.1.min.js"></script>
+
+    <script type="text/javascript" src="interact.js"></script>
+
+    <!-- <script src="needle.js"></script> -->
     <!-- <script src="topo.js"></script> -->
-    <!-- <script src="dot.js"></script> -->
+    <script type="text/javascript" src="dot.js"></script>
+
     <link rel="stylesheet" type="text/css" href="styles.css"> </link>
   </head>
+
   <body>
-    <h1> Pattern Tool v 0.0 </h1>
-    <div id="needle-tool-canvas"> </div>
-    <div id="topo-tool-canvas"> </div>
-    <div id="dot-tool-canvas"> </div>
+    <header>
+      <h1> pattern experiments </h1>
+    </header>
+    <div class="tool-canvas" id="needle-tool-canvas"> </div>
+    <div class="tool-canvas" id="topo-tool-canvas"> </div>
+    <div class="tool-canvas" id="dot-tool-canvas"> </div>
   </body>
-  <footer>
-      <div>
-        <p> <a href="mailto:dexter.callender@compass.com?subject=Compass Pattern Tool"> Support: dexter.callender@compass.com </a> </p>
-      </div>
-  </footer>
+
 </html>
