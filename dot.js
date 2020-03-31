@@ -1,4 +1,4 @@
-// Features
+// Desired Feature Set
 
 /*
   LAYOUT
@@ -19,8 +19,8 @@
 /*
   DYNAMIC
   - rotate right,
-  -
-  -
+  - rotate one, hide under another
+  - see other animation patterns in animation style guide
 */
 
 // TODO: Expose bezier motion curve
@@ -29,19 +29,21 @@ let cnv;
 
 let dots = [];
 
-const grid = 'GRID';
-const circle = 'CIRCLE';
-const triangle = 'TRIANGLE';
-let layoutState = grid;
+const GRID = 'GRID';
+const CIRCLE = 'CIRCLE';
+const TRIANGLE = 'TRIANGLE';
+const BLACK = 'BLACK';
+const WHITE = 'WHITE';
 
 let Config = function() {
-	this.layout = 'GRID';
+	this.layout = GRID;
 	this.gridWidth = 2;		// Width = # of dots
 	this.gridHeight = 2;
 	this.gridSpacing = 40;
 	this.circleRadius = 40;
 	this.circleIncrements = 8;
 	this.triangleEdgeLength = 3;
+	this.fill = BLACK;
 }
 let config = new Config();
 
@@ -51,7 +53,11 @@ function setup() {
 	initializeGrid();
 
 	var gui = new dat.GUI();
-	gui.add(config, 'layout', [grid, circle, triangle] );
+	gui.add(config, 'fill', [BLACK, WHITE]);
+	gui.add(config, 'layout', [GRID, CIRCLE, TRIANGLE] ).onChange(renderConfig);
+	var f1 = gui.addFolder('Grid');
+	f1.add(config, 'gridWidth', 1, 50);
+
 	gui.remember(config);
 }
 
@@ -59,19 +65,10 @@ function draw() {
 	cnv = createCanvas(windowWidth, windowHeight)
   cnv.parent('dot-tool-canvas');
 
-	if (layoutState != config.layout) {
-		switch(config.layout) {
-			case grid:
-				initializeGrid();
-				break;
-			case circle:
-				initializeCircle();
-				break;
-			case triangle:
-				intializeTriangle();
-				break;
-		}
-		layoutState = config.layout
+	if (config.fill === BLACK) {
+		fill(0);
+	} else {
+		fill(255);
 	}
 
 	push();
@@ -95,7 +92,11 @@ class Dot {
 	}
 
 	motionCurve () {
+		// motion curve
+	}
 
+	motionBlur () {
+		// configurable motion blur
 	}
 
 	render() {
@@ -120,7 +121,21 @@ function initializeCircle() {
 }
 
 function intializeTriangle() {
-	console.log('Initialized triangle');
+	console.log('Should initialize triangle');
+}
+
+function renderConfig() {
+	switch(config.layout) {
+		case GRID:
+			initializeGrid();
+			break;
+		case CIRCLE:
+			initializeCircle();
+			break;
+		case TRIANGLE:
+			intializeTriangle();
+			break;
+	}
 }
 
 function windowResized() {
