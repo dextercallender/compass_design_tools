@@ -29,19 +29,20 @@ let cnv;
 
 let dots = [];
 
-grid = 'GRID';
-circle = 'CIRCLE';
-triangle = 'TRIANGLE';
+const grid = 'GRID';
+const circle = 'CIRCLE';
+const triangle = 'TRIANGLE';
+let layoutState = grid;
 
 let Config = function() {
 	this.layout = 'GRID';
 	this.gridWidth = 2;		// Width = # of dots
 	this.gridHeight = 2;
-	this.gridSpacing = 20;
-	this.circleIncrements = 6;
+	this.gridSpacing = 40;
+	this.circleRadius = 40;
+	this.circleIncrements = 8;
 	this.triangleEdgeLength = 3;
 }
-
 let config = new Config();
 
 function setup() {
@@ -50,13 +51,28 @@ function setup() {
 	initializeGrid();
 
 	var gui = new dat.GUI();
-	gui.add(config, 'layout', ['GRID', 'CIRCLE', 'LINE'] );
+	gui.add(config, 'layout', [grid, circle, triangle] );
 	gui.remember(config);
 }
 
 function draw() {
 	cnv = createCanvas(windowWidth, windowHeight)
   cnv.parent('dot-tool-canvas');
+
+	if (layoutState != config.layout) {
+		switch(config.layout) {
+			case grid:
+				initializeGrid();
+				break;
+			case circle:
+				initializeCircle();
+				break;
+			case triangle:
+				intializeTriangle();
+				break;
+		}
+		layoutState = config.layout
+	}
 
 	push();
 	translate(windowWidth/2, windowHeight/2);
@@ -75,9 +91,7 @@ class Dot {
 	}
 
 	move(newPosition) {
-
 		// uses motion curve moveRange times and renders each step
-
 	}
 
 	motionCurve () {
@@ -99,11 +113,14 @@ function initializeGrid() {
 }
 
 function initializeCircle() {
-
+	dots = [];
+	for (let i = 0; i < 2*TWO_PI; i += TWO_PI/config.circleIncrements) {
+		dots.push(new Dot(new p5.Vector(cos(i) * config.circleRadius, sin(i) * config.circleRadius)));
+	}
 }
 
 function intializeTriangle() {
-
+	console.log('Initialized triangle');
 }
 
 function windowResized() {
