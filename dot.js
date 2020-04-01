@@ -36,6 +36,7 @@ const BLACK = 'BLACK';
 const WHITE = 'WHITE';
 const CTRLPT1 = 'CONTROL_POINT_1';
 const CTRLPT2 = 'CONTROL_POINT_2';
+const FRAME_RATE = 60
 
 let Config = function() {
 	this.layout = GRID;
@@ -49,11 +50,16 @@ let Config = function() {
 
 	this.motionCtrlPt1 = new p5.Vector(30, 30);
 	this.motionCtrlPt2 = new p5.Vector(120, 120);
+
+	this.animationSpeed = 1;
+	this.gridAnimation1 = false;
 }
 let config = new Config();
 
 function setup() {
 	createCanvas(400, 400);
+
+	frameRate(FRAME_RATE);
 
 	initializeGrid();
 
@@ -64,6 +70,7 @@ function setup() {
 	f1.add(config, 'gridWidth', 1, 25).onChange(reinitializeConfig);
 	f1.add(config, 'gridHeight', 1, 25).onChange(reinitializeConfig);
 	f1.add(config, 'gridSpacing', 15, 200).onChange(reinitializeConfig);
+	f1.add(config, 'gridAnimation1').onChange(reinitializeConfig);
 	var f2 = gui.addFolder('Circle');
 	f2.add(config, 'circleRadius', 10, 200).onChange(reinitializeConfig);
 	f2.add(config, 'circleIncrements', 3, 20).onChange(reinitializeConfig);	// TODO : fix & limit based on radius
@@ -80,6 +87,12 @@ function draw() {
 
 	if (ctrlPtDragging) {
 		setMotionCtrlPt()
+	}
+
+	motionCycle();
+
+	if (config.gridAnimation1) {
+		animateGrid1();
 	}
 
 	renderGraphicCentered();
@@ -174,6 +187,8 @@ const MODIFIER_PANE_RIGHT = 190;
 const MODIFIER_PANE_BOTTOM = 200;
 const CURVE_MODIFIER_LENGTH = 150;
 const CTRL_POINT_DIAMETER = 10;
+const CURVE_ANCHOR1 = new p5.Vector(0, CURVE_MODIFIER_LENGTH);
+const CURVE_ANCHOR2 = new p5.Vector(CURVE_MODIFIER_LENGTH, 0);
 
 function renderMotionCurveModifier() {
 	push();
@@ -186,7 +201,7 @@ function renderMotionCurveModifier() {
 
 	stroke(0);
 	strokeWeight(2);
-	bezier(0, CURVE_MODIFIER_LENGTH, config.motionCtrlPt1.x, config.motionCtrlPt1.y, config.motionCtrlPt2.x, config.motionCtrlPt2.y, CURVE_MODIFIER_LENGTH, 0);
+	bezier(CURVE_ANCHOR1.x, CURVE_ANCHOR1.y, config.motionCtrlPt1.x, config.motionCtrlPt1.y, config.motionCtrlPt2.x, config.motionCtrlPt2.y, CURVE_ANCHOR2.x, CURVE_ANCHOR2.y);
 
 	pop();
 }
@@ -228,12 +243,36 @@ function setMotionCtrlPt() {
 	}
 }
 
+let MOTION_ITERATOR = 0;
+let MAX_ITERATION = FRAME_RATE * config.animationSpeed - 1;
 
+function motionCycle() {
+
+	push();
+	translate(windowWidth - MODIFIER_PANE_RIGHT, windowHeight - MODIFIER_PANE_BOTTOM);
+
+	x = bezierPoint(CURVE_ANCHOR1.x, config.motionCtrlPt1.x, config.motionCtrlPt2.x, CURVE_ANCHOR2.x, MOTION_ITERATOR / MAX_ITERATION);
+	y = bezierPoint(CURVE_ANCHOR1.y, config.motionCtrlPt1.y, config.motionCtrlPt2.y, CURVE_ANCHOR2.y, MOTION_ITERATOR / MAX_ITERATION);
+
+	ellipse(x, y, 10, 10);
+
+	pop();
+
+	if (MOTION_ITERATOR < MAX_ITERATION){
+		MOTION_ITERATOR++;
+	} else {
+		MOTION_ITERATOR = 0;
+	}
+}
 
 function calculateSpeedFromCurve() {
 	// https://p5js.org/reference/#/p5/bezierTangent
 	// https://p5js.org/reference/#/p5/bezier
 
+}
+
+function animateGrid1(){
+	return
 }
 
 function windowResized() {
