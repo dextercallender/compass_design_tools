@@ -26,14 +26,16 @@
 // TODO: Expose bezier motion curve
 
 let cnv;
-
 let dots = [];
+let ctrlPtDragging = null;
 
 const GRID = 'GRID';
 const CIRCLE = 'CIRCLE';
 const TRIANGLE = 'TRIANGLE';
 const BLACK = 'BLACK';
 const WHITE = 'WHITE';
+const CTRLPT1 = 'CONTROL_POINT_1';
+const CTRLPT2 = 'CONTROL_POINT_2';
 
 let Config = function() {
 	this.layout = GRID;
@@ -46,7 +48,7 @@ let Config = function() {
 	this.fill = BLACK;
 
 	this.motionCtrlPt1 = new p5.Vector(30, 30);
-	this.motionCtrlPt2 = new p5.Vector(90, 90);
+	this.motionCtrlPt2 = new p5.Vector(120, 120);
 }
 let config = new Config();
 
@@ -76,8 +78,11 @@ function draw() {
 
 	renderMotionCurveModifier();
 
-	renderGraphicCentered();
+	if (ctrlPtDragging) {
+		setMotionCtrlPt()
+	}
 
+	renderGraphicCentered();
 }
 
 class Dot {
@@ -165,7 +170,7 @@ function renderGraphicCentered() {
 	}
 }
 
-const MODIFIER_PANE_RIGHT = 200;
+const MODIFIER_PANE_RIGHT = 190;
 const MODIFIER_PANE_BOTTOM = 200;
 const CURVE_MODIFIER_LENGTH = 150;
 const CTRL_POINT_DIAMETER = 10;
@@ -173,10 +178,6 @@ const CTRL_POINT_DIAMETER = 10;
 function renderMotionCurveModifier() {
 	push();
 	translate(windowWidth - MODIFIER_PANE_RIGHT, windowHeight - MODIFIER_PANE_BOTTOM);
-
-	stroke(0);
-	strokeWeight(1);
-	rect(windowWidth - MODIFIER_PANE_RIGHT, windowHeight - MODIFIER_PANE_BOTTOM, CURVE_MODIFIER_LENGTH, CURVE_MODIFIER_LENGTH);
 
 	stroke(0);
 	strokeWeight(1);
@@ -190,34 +191,44 @@ function renderMotionCurveModifier() {
 	pop();
 }
 
-let ctrlPtDragging = null;
-
 function mousePressed() {
+	adjustedMouseX = mouseX - (windowWidth - MODIFIER_PANE_RIGHT);
+	adjustedMouseY = mouseY - (windowHeight - MODIFIER_PANE_BOTTOM);
+	if (adjustedMouseX >= config.motionCtrlPt1.x - (CTRL_POINT_DIAMETER/2)
+		&& adjustedMouseX <= config.motionCtrlPt1.x + (CTRL_POINT_DIAMETER/2)
+		&& adjustedMouseY >= config.motionCtrlPt1.y - (CTRL_POINT_DIAMETER/2)
+		&& adjustedMouseY <= config.motionCtrlPt1.y + (CTRL_POINT_DIAMETER/2) )
+	{
+		ctrlPtDragging = CTRLPT1;
+	}
+	else if (adjustedMouseX > config.motionCtrlPt2.x - (CTRL_POINT_DIAMETER/2)
+		&& adjustedMouseX < config.motionCtrlPt2.x + (CTRL_POINT_DIAMETER/2)
+		&& adjustedMouseY > config.motionCtrlPt2.y - (CTRL_POINT_DIAMETER/2)
+		&& adjustedMouseY < config.motionCtrlPt2.y + (CTRL_POINT_DIAMETER/2) )
+	{
+		ctrlPtDragging = CTRLPT2;
+	}
+}
 
+function mouseReleased() {
+	ctrlPtDragging = null;
+}
+
+function setMotionCtrlPt() {
 	adjustedMouseX = mouseX - (windowWidth - MODIFIER_PANE_RIGHT);
 	adjustedMouseY = mouseY - (windowHeight - MODIFIER_PANE_BOTTOM);
 
-	if (adjustedMouseX > config.motionCtrlPt1.x - (CTRL_POINT_DIAMETER/2)
-		&& adjustedMouseX < config.motionCtrlPt1.x + (CTRL_POINT_DIAMETER/2)
-		&& adjustedMouseY > config.motionCtrlPt1.y - (CTRL_POINT_DIAMETER/2)
-		&& adjustedMouseY < config.motionCtrlPt1.x + (CTRL_POINT_DIAMETER/2) )
-	{
-		ctrlPtDragging = config.motionCtrlPt1;
-		console.log('dragging point 1');
-
-	} else if (adjustedMouseX > config.motionCtrlPt2.x - (CTRL_POINT_DIAMETER/2)
-		&& adjustedMouseX < config.motionCtrlPt2.x + (CTRL_POINT_DIAMETER/2)
-		&& adjustedMouseY > config.motionCtrlPt2.y - (CTRL_POINT_DIAMETER/2)
-		&& adjustedMouseY < config.motionCtrlPt2.x + (CTRL_POINT_DIAMETER/2) )
-	{
-		ctrlPtDragging = config.motionCtrlPt2;
-		console.log('dragging point 2');
-
-	} else {
-		ctrlPtDragging = null;
+	if (ctrlPtDragging === CTRLPT1) {
+		config.motionCtrlPt1.x = constrain(adjustedMouseX, 0, CURVE_MODIFIER_LENGTH);
+		config.motionCtrlPt1.y = constrain(adjustedMouseY, 0, CURVE_MODIFIER_LENGTH);
 	}
-
+	if (ctrlPtDragging === CTRLPT2) {
+		config.motionCtrlPt2.x = constrain(adjustedMouseX, 0, CURVE_MODIFIER_LENGTH);
+		config.motionCtrlPt2.y = constrain(adjustedMouseY, 0, CURVE_MODIFIER_LENGTH);
+	}
 }
+
+
 
 function calculateSpeedFromCurve() {
 	// https://p5js.org/reference/#/p5/bezierTangent
