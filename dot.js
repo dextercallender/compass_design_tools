@@ -44,6 +44,9 @@ let Config = function() {
 	this.circleIncrements = 8;
 	this.triangleEdgeLength = 3;
 	this.fill = BLACK;
+
+	this.motionCtrlPt1 = new p5.Vector(30, 30);
+	this.motionCtrlPt2 = new p5.Vector(90, 90);
 }
 let config = new Config();
 
@@ -71,9 +74,10 @@ function draw() {
 	cnv = createCanvas(windowWidth, windowHeight)
   cnv.parent('dot-tool-canvas');
 
-	if (config.fill === BLACK) { fill(0); }
+	renderMotionCurveModifier();
 
-	renderCentered();
+	renderGraphicCentered();
+
 }
 
 class Dot {
@@ -97,6 +101,10 @@ class Dot {
 	}
 
 	render() {
+		if (config.fill === BLACK) { fill(0); }
+		if (config.fill === WHITE) { fill(255); }
+		stroke(0);
+		strokeWeight(1);
 		ellipse(this.position.x, this.position.y, this.size, this.size);
 	}
 }
@@ -135,7 +143,7 @@ function reinitializeConfig() {
 	}
 }
 
-function renderCentered() {
+function renderGraphicCentered() {
 	switch(config.layout) {
 		case GRID:
 			pixelWidth = (config.gridWidth - 1) * config.gridSpacing;
@@ -155,6 +163,66 @@ function renderCentered() {
 
 			break;
 	}
+}
+
+const MODIFIER_PANE_RIGHT = 200;
+const MODIFIER_PANE_BOTTOM = 200;
+const CURVE_MODIFIER_LENGTH = 150;
+const CTRL_POINT_DIAMETER = 10;
+
+function renderMotionCurveModifier() {
+	push();
+	translate(windowWidth - MODIFIER_PANE_RIGHT, windowHeight - MODIFIER_PANE_BOTTOM);
+
+	stroke(0);
+	strokeWeight(1);
+	rect(windowWidth - MODIFIER_PANE_RIGHT, windowHeight - MODIFIER_PANE_BOTTOM, CURVE_MODIFIER_LENGTH, CURVE_MODIFIER_LENGTH);
+
+	stroke(0);
+	strokeWeight(1);
+	ellipse(config.motionCtrlPt1.x, config.motionCtrlPt1.y, CTRL_POINT_DIAMETER, CTRL_POINT_DIAMETER);
+	ellipse(config.motionCtrlPt2.x, config.motionCtrlPt2.y, CTRL_POINT_DIAMETER, CTRL_POINT_DIAMETER);
+
+	stroke(0);
+	strokeWeight(2);
+	bezier(0, CURVE_MODIFIER_LENGTH, config.motionCtrlPt1.x, config.motionCtrlPt1.y, config.motionCtrlPt2.x, config.motionCtrlPt2.y, CURVE_MODIFIER_LENGTH, 0);
+
+	pop();
+}
+
+let ctrlPtDragging = null;
+
+function mousePressed() {
+
+	adjustedMouseX = mouseX - (windowWidth - MODIFIER_PANE_RIGHT);
+	adjustedMouseY = mouseY - (windowHeight - MODIFIER_PANE_BOTTOM);
+
+	if (adjustedMouseX > config.motionCtrlPt1.x - (CTRL_POINT_DIAMETER/2)
+		&& adjustedMouseX < config.motionCtrlPt1.x + (CTRL_POINT_DIAMETER/2)
+		&& adjustedMouseY > config.motionCtrlPt1.y - (CTRL_POINT_DIAMETER/2)
+		&& adjustedMouseY < config.motionCtrlPt1.x + (CTRL_POINT_DIAMETER/2) )
+	{
+		ctrlPtDragging = config.motionCtrlPt1;
+		console.log('dragging point 1');
+
+	} else if (adjustedMouseX > config.motionCtrlPt2.x - (CTRL_POINT_DIAMETER/2)
+		&& adjustedMouseX < config.motionCtrlPt2.x + (CTRL_POINT_DIAMETER/2)
+		&& adjustedMouseY > config.motionCtrlPt2.y - (CTRL_POINT_DIAMETER/2)
+		&& adjustedMouseY < config.motionCtrlPt2.x + (CTRL_POINT_DIAMETER/2) )
+	{
+		ctrlPtDragging = config.motionCtrlPt2;
+		console.log('dragging point 2');
+
+	} else {
+		ctrlPtDragging = null;
+	}
+
+}
+
+function calculateSpeedFromCurve() {
+	// https://p5js.org/reference/#/p5/bezierTangent
+	// https://p5js.org/reference/#/p5/bezier
+
 }
 
 function windowResized() {
