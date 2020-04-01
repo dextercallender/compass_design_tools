@@ -38,6 +38,11 @@ const CTRLPT1 = 'CONTROL_POINT_1';
 const CTRLPT2 = 'CONTROL_POINT_2';
 const FRAME_RATE = 60;
 
+let MotionProgress = function(keyframe, percentage) {
+	this.keyframe = keyframe;
+	this.percentTravelled = percentage;
+}
+
 let Config = function() {
 	this.layout = GRID;
 	this.gridWidth = 2;		// Width = # of dots
@@ -48,10 +53,12 @@ let Config = function() {
 	this.triangleEdgeLength = 3;
 	this.fill = BLACK;
 
-	this.motionCtrlPt1 = new p5.Vector(30, 30);
-	this.motionCtrlPt2 = new p5.Vector(120, 120);
+	this.motionCtrlPt1 = new p5.Vector(120, 120);
+	this.motionCtrlPt2 = new p5.Vector(30, 30);
 
 	this.animationDuration = 1;
+	this.motionProgress = new MotionProgress(0,0);
+
 	this.gridAnimation1 = false;
 }
 let config = new Config();
@@ -72,7 +79,7 @@ function setup() {
 	f1.add(config, 'gridWidth', 1, 25).onChange(reinitializeConfig);
 	f1.add(config, 'gridHeight', 1, 25).onChange(reinitializeConfig);
 	f1.add(config, 'gridSpacing', 15, 200).onChange(reinitializeConfig);
-	f1.add(config, 'gridAnimation1').onChange(reinitializeConfig);
+	f1.add(config, 'gridAnimation1').onChange(animateGrid1);
 
 	var f2 = gui.addFolder('Circle');
 	f2.add(config, 'circleRadius', 10, 200).onChange(reinitializeConfig);
@@ -103,26 +110,43 @@ function draw() {
 }
 
 class Dot {
-	constructor(position) {
+	constructor (position) {
 		this.position = position;
 		this.size = 15;
-		this.moveIncrement = 0;
-		this.moveRange = 24;
+		this.motionSequence = [];
+		this.inMotion = false;
+		this.motionSequenceIterator = -1;
 	}
 
-	move(newPosition) {
-		// uses motion curve moveRange times and renders each step
+	enqueueMotion(x, y) {
+		this.motionSequence.push(new p5.Vector(x, y));
 	}
 
-	motionCurve () {
-		// motion curve
+	enqueuePause() {
+		this.motionSequence.push(new p5.Vector(0, 0));
 	}
 
-	motionBlur () {
-		// configurable motion blur
+	startMotionSequence() {
+		this.inMotion = true;
+		this.motionSequenceIterator = 0;
 	}
 
-	render() {
+	move() {
+		let currentMotion = this.motionSequence[this.motionSequenceIterator];
+		this.position.x = this.position.x + (currentMotion.x * config.motionProgress.percentTravelled);
+		this.position.y = this.position.y + (currentMotion.y * config.motionProgress.percentTravelled);
+	}
+
+	render() {		// only function getting called every frame
+		if (this.inMotion) {
+			if (config.motionProgress.keyframe === 0) {
+				this.motionSequenceIterator++;
+				this.move();
+			} else {
+				this.move();
+			}
+		}
+
 		if (config.fill === BLACK) { fill(0); }
 		if (config.fill === WHITE) { fill(255); }
 		stroke(0);
@@ -194,20 +218,20 @@ const CTRL_POINT_DIAMETER = 10;
 const CURVE_ANCHOR1 = new p5.Vector(0, CURVE_MODIFIER_LENGTH);
 const CURVE_ANCHOR2 = new p5.Vector(CURVE_MODIFIER_LENGTH, 0);
 let MOTION_ITERATOR = 0;
+let MAX_ITERATION = FRAME_RATE * config.animationDuration - 1;
 
 function renderMotionCurveModifier() {
 	push();
 	translate(windowWidth - MODIFIER_PANE_RIGHT, windowHeight - MODIFIER_PANE_BOTTOM);
 
 	stroke(0);
-	strokeWeight(1);
-	ellipse(config.motionCtrlPt1.x, config.motionCtrlPt1.y, CTRL_POINT_DIAMETER, CTRL_POINT_DIAMETER);
-	ellipse(config.motionCtrlPt2.x, config.motionCtrlPt2.y, CTRL_POINT_DIAMETER, CTRL_POINT_DIAMETER);
-
-	stroke(0);
 	strokeWeight(2);
 	bezier(CURVE_ANCHOR1.x, CURVE_ANCHOR1.y, config.motionCtrlPt1.x, config.motionCtrlPt1.y, config.motionCtrlPt2.x, config.motionCtrlPt2.y, CURVE_ANCHOR2.x, CURVE_ANCHOR2.y);
 
+	stroke(0);
+	strokeWeight(1);
+	ellipse(config.motionCtrlPt1.x, config.motionCtrlPt1.y, CTRL_POINT_DIAMETER, CTRL_POINT_DIAMETER);
+	ellipse(config.motionCtrlPt2.x, config.motionCtrlPt2.y, CTRL_POINT_DIAMETER, CTRL_POINT_DIAMETER);
 	pop();
 }
 
@@ -249,18 +273,17 @@ function setMotionCtrlPt() {
 }
 
 function motionCycle() {
-	let MAX_ITERATION = FRAME_RATE * config.animationDuration - 1;
+	MAX_ITERATION = FRAME_RATE * config.animationDuration - 1;
 
 	push();
 	translate(windowWidth - MODIFIER_PANE_RIGHT, windowHeight - MODIFIER_PANE_BOTTOM);
 
 	x = bezierPoint(CURVE_ANCHOR1.x, config.motionCtrlPt1.x, config.motionCtrlPt2.x, CURVE_ANCHOR2.x, MOTION_ITERATOR / MAX_ITERATION);
 	y = bezierPoint(CURVE_ANCHOR1.y, config.motionCtrlPt1.y, config.motionCtrlPt2.y, CURVE_ANCHOR2.y, MOTION_ITERATOR / MAX_ITERATION);
-
 	ellipse(x, y, 10, 10);
 
-	
-
+	config.motionProgress.keyframe = MOTION_ITERATOR;
+	config.motionProgress.percentTravelled = 1 - (y / CURVE_MODIFIER_LENGTH); // acounts for flipped y-axis in p5/processing
 	pop();
 
 	if (MOTION_ITERATOR < MAX_ITERATION){
@@ -270,14 +293,19 @@ function motionCycle() {
 	}
 }
 
-function calculateSpeedFromCurve() {
-	// https://p5js.org/reference/#/p5/bezierTangent
-	// https://p5js.org/reference/#/p5/bezier
+function animateGrid1() {
+	reinitializeConfig();
 
-}
+	for (let i = 0; i < dots.length; i++) {
+		dots[i].enqueueMotion(20, 0);
+		dots[i].enqueueMotion(0, 20);
+	}
 
-function animateGrid1(){
-	return
+	console.log(dots);
+
+	for (let i = 0; i < dots.length; i++) {
+		dots[i].startMotionSequence();
+	}
 }
 
 function windowResized() {
