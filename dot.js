@@ -110,6 +110,7 @@ function draw() {
 class Dot {
 	constructor (position) {
 		this.position = position;
+		this.departurePosition = position;
 		this.size = 15;
 		this.motionSequence = [];
 		this.inMotion = false;
@@ -133,14 +134,17 @@ class Dot {
 
 		// TODO: add difference between current point and current point * motion percentage
 
-		this.position.x = this.position.x + (currentMotion.x * config.motionProgress.percentTravelled);
-		this.position.y = this.position.y + (currentMotion.y * config.motionProgress.percentTravelled);
+		// console.log(currentMotion.y)
+		//console.log(this.departurePosition.y == this.position.y);
+		this.position.x = this.departurePosition.x + (currentMotion.x * config.motionProgress.percentTravelled);
+		this.position.y = this.departurePosition.y + (currentMotion.y * config.motionProgress.percentTravelled);
 	}
 
 	render() {		// only function getting called every frame
 		if (this.inMotion) {
 			if (config.motionProgress.keyframe === 0) {
 				this.motionSequenceIterator++;
+				this.departurePosition = this.position;
 			}
 			this.move();
 		}
@@ -170,7 +174,7 @@ function initializeCircle() {
 }
 
 function intializeTriangle() {
-	console.log('Should initialize triangle');
+	return
 }
 
 function initializeConfig() {
