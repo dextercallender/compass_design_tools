@@ -36,7 +36,7 @@ const BLACK = 'BLACK';
 const WHITE = 'WHITE';
 const CTRLPT1 = 'CONTROL_POINT_1';
 const CTRLPT2 = 'CONTROL_POINT_2';
-const FRAME_RATE = 60;
+const FRAME_RATE = 90;
 
 let MotionProgress = function(keyframe, percentage) {
 	this.keyframe = keyframe;
@@ -53,13 +53,13 @@ let Config = function() {
 	this.triangleEdgeLength = 3;
 	this.fill = BLACK;
 
-	this.motionCtrlPt1 = new p5.Vector(120, 120);
-	this.motionCtrlPt2 = new p5.Vector(30, 30);
+	this.motionCtrlPt1 = new p5.Vector(150, 150);
+	this.motionCtrlPt2 = new p5.Vector(0, 0);
 
 	this.animationDuration = 1;
 	this.motionProgress = new MotionProgress(0,0);
+	this.animate = true;
 
-	this.gridAnimation1 = false;
 }
 let config = new Config();
 
@@ -68,22 +68,24 @@ function setup() {
 
 	frameRate(FRAME_RATE);
 
-	initializeGrid();
+	initializeConfig();
+	initializeAnimation();
 
 	var gui = new dat.GUI();
 	gui.add(config, 'fill', [BLACK, WHITE]);
-	gui.add(config, 'layout', [GRID, CIRCLE, TRIANGLE] ).onChange(reinitializeConfig);
+	gui.add(config, 'layout', [GRID, CIRCLE, TRIANGLE] ).onChange(initializeConfig);
+	gui.add(config, 'animate').onChange(initializeAnimation);
 	gui.add(config, 'animationDuration', .5, 4);
 
 	var f1 = gui.addFolder('Grid');
-	f1.add(config, 'gridWidth', 1, 25).onChange(reinitializeConfig);
-	f1.add(config, 'gridHeight', 1, 25).onChange(reinitializeConfig);
-	f1.add(config, 'gridSpacing', 15, 200).onChange(reinitializeConfig);
-	f1.add(config, 'gridAnimation1').onChange(animateGrid1);
+	f1.add(config, 'gridWidth', 1, 25).onChange(initializeConfig);
+	f1.add(config, 'gridHeight', 1, 25).onChange(initializeConfig);
+	f1.add(config, 'gridSpacing', 15, 200).onChange(initializeConfig);
+
 
 	var f2 = gui.addFolder('Circle');
-	f2.add(config, 'circleRadius', 10, 200).onChange(reinitializeConfig);
-	f2.add(config, 'circleIncrements', 3, 20).onChange(reinitializeConfig);	// TODO : fix & limit based on radius
+	f2.add(config, 'circleRadius', 10, 200).onChange(initializeConfig);
+	f2.add(config, 'circleIncrements', 3, 20).onChange(initializeConfig);	// TODO : fix & limit based on radius
 
 	var f3 = gui.addFolder('Triangle');
 
@@ -102,10 +104,6 @@ function draw() {
 
 	motionCycle();
 
-	if (config.gridAnimation1) {
-		animateGrid1();
-	}
-
 	renderGraphicCentered();
 }
 
@@ -115,7 +113,7 @@ class Dot {
 		this.size = 15;
 		this.motionSequence = [];
 		this.inMotion = false;
-		this.motionSequenceIterator = -1;
+		this.motionSequenceIterator = 0;
 	}
 
 	enqueueMotion(x, y) {
@@ -128,11 +126,13 @@ class Dot {
 
 	startMotionSequence() {
 		this.inMotion = true;
-		this.motionSequenceIterator = 0;
 	}
 
 	move() {
 		let currentMotion = this.motionSequence[this.motionSequenceIterator];
+
+		// TODO: add difference between current point and current point * motion percentage
+
 		this.position.x = this.position.x + (currentMotion.x * config.motionProgress.percentTravelled);
 		this.position.y = this.position.y + (currentMotion.y * config.motionProgress.percentTravelled);
 	}
@@ -141,10 +141,8 @@ class Dot {
 		if (this.inMotion) {
 			if (config.motionProgress.keyframe === 0) {
 				this.motionSequenceIterator++;
-				this.move();
-			} else {
-				this.move();
 			}
+			this.move();
 		}
 
 		if (config.fill === BLACK) { fill(0); }
@@ -175,7 +173,7 @@ function intializeTriangle() {
 	console.log('Should initialize triangle');
 }
 
-function reinitializeConfig() {
+function initializeConfig() {
 	switch(config.layout) {
 		case GRID:
 			initializeGrid();
@@ -286,26 +284,35 @@ function motionCycle() {
 	config.motionProgress.percentTravelled = 1 - (y / CURVE_MODIFIER_LENGTH); // acounts for flipped y-axis in p5/processing
 	pop();
 
-	if (MOTION_ITERATOR < MAX_ITERATION){
+	if (MOTION_ITERATOR <= MAX_ITERATION){
 		MOTION_ITERATOR++;
 	} else {
 		MOTION_ITERATOR = 0;
 	}
 }
 
-function animateGrid1() {
-	reinitializeConfig();
+function initializeAnimation() {
+	initializeConfig();
 
-	for (let i = 0; i < dots.length; i++) {
-		dots[i].enqueueMotion(20, 0);
-		dots[i].enqueueMotion(0, 20);
+	if(config.animate) {
+		switch(config.layout) {
+			case GRID:
+				for (let i = 0; i < dots.length; i++) {
+					dots[i].enqueueMotion(5, 0);
+					dots[i].enqueueMotion(0, 5);
+					dots[i].enqueueMotion(5, 0);
+				}
+				for (let i = 0; i < dots.length; i++) {
+					dots[i].startMotionSequence();
+				}
+				break;
+			case CIRCLE:
+				break;
+			case TRIANGLE:
+				break;
+		}
 	}
 
-	console.log(dots);
-
-	for (let i = 0; i < dots.length; i++) {
-		dots[i].startMotionSequence();
-	}
 }
 
 function windowResized() {
