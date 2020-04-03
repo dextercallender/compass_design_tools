@@ -71,7 +71,7 @@ function setup() {
 	initializeConfig();
 	initializeAnimation();
 
-	var gui = new dat.GUI();
+	var gui = new dat.GUI( {autoplace: false, width: 300 });
 	gui.add(config, 'fill', [BLACK, WHITE]);
 	gui.add(config, 'layout', [GRID, CIRCLE, TRIANGLE] ).onChange(initializeConfig);
 	gui.add(config, 'animate').onChange(initializeAnimation);
@@ -110,7 +110,7 @@ function draw() {
 class Dot {
 	constructor (position) {
 		this.position = position;
-		this.departurePosition = position;
+		this.departurePosition = new p5.Vector(0, 0);
 		this.size = 15;
 		this.motionSequence = [];
 		this.inMotion = false;
@@ -131,11 +131,6 @@ class Dot {
 
 	move() {
 		let currentMotion = this.motionSequence[this.motionSequenceIterator];
-
-		// TODO: add difference between current point and current point * motion percentage
-
-		// console.log(currentMotion.y)
-		//console.log(this.departurePosition.y == this.position.y);
 		this.position.x = this.departurePosition.x + (currentMotion.x * config.motionProgress.percentTravelled);
 		this.position.y = this.departurePosition.y + (currentMotion.y * config.motionProgress.percentTravelled);
 	}
@@ -143,12 +138,13 @@ class Dot {
 	render() {		// only function getting called every frame
 		if (this.inMotion) {
 			if (config.motionProgress.keyframe === 0) {
+				console.log('next');
 				this.motionSequenceIterator++;
-				this.departurePosition = this.position;
+				this.departurePosition.x = this.position.x;
+				this.departurePosition.y = this.position.y;
 			}
 			this.move();
 		}
-
 		if (config.fill === BLACK) { fill(0); }
 		if (config.fill === WHITE) { fill(255); }
 		stroke(0);
@@ -302,9 +298,9 @@ function initializeAnimation() {
 		switch(config.layout) {
 			case GRID:
 				for (let i = 0; i < dots.length; i++) {
-					dots[i].enqueueMotion(5, 0);
-					dots[i].enqueueMotion(0, 5);
-					dots[i].enqueueMotion(5, 0);
+					dots[i].enqueueMotion(config.gridSpacing, 0);
+					dots[i].enqueueMotion(0, config.gridSpacing);
+					dots[i].enqueueMotion(config.gridSpacing, 0);
 				}
 				for (let i = 0; i < dots.length; i++) {
 					dots[i].startMotionSequence();
