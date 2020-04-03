@@ -114,7 +114,8 @@ class Dot {
 		this.size = 15;
 		this.motionSequence = [];
 		this.inMotion = false;
-		this.motionSequenceIterator = 0;
+		this.motionSequenceIterator = -1;
+		this.motionReverse = false;
 	}
 
 	enqueueMotion(x, y) {
@@ -130,16 +131,38 @@ class Dot {
 	}
 
 	move() {
-		let currentMotion = this.motionSequence[this.motionSequenceIterator];
-		this.position.x = this.departurePosition.x + (currentMotion.x * config.motionProgress.percentTravelled);
-		this.position.y = this.departurePosition.y + (currentMotion.y * config.motionProgress.percentTravelled);
+		let currentMotionX = this.motionSequence[this.motionSequenceIterator].x;
+		let currentMotionY = this.motionSequence[this.motionSequenceIterator].y;
+
+		if (this.motionReverse) {
+			currentMotionX *= -1;
+			currentMotionY *= -1;
+		}
+
+		this.position.x = this.departurePosition.x + (currentMotionX * config.motionProgress.percentTravelled);
+		this.position.y = this.departurePosition.y + (currentMotionY * config.motionProgress.percentTravelled);
 	}
 
 	render() {		// only function getting called every frame
 		if (this.inMotion) {
 			if (config.motionProgress.keyframe === 0) {
-				console.log('next');
-				this.motionSequenceIterator++;
+
+				if (!this.motionReverse) {
+					this.motionSequenceIterator++;
+				} else {
+					this.motionSequenceIterator--;
+				}
+
+				if (this.motionSequenceIterator === this.motionSequence.length) {
+					this.motionReverse = true;
+					this.motionSequenceIterator--;
+				}
+
+				if (this.motionSequenceIterator === -1) {
+					this.motionReverse = false;
+					this.motionSequenceIterator++;
+				}
+
 				this.departurePosition.x = this.position.x;
 				this.departurePosition.y = this.position.y;
 			}
@@ -188,6 +211,9 @@ function initializeConfig() {
 }
 
 function renderGraphicCentered() {
+
+	// TODO: Center in spite of animation
+
 	switch(config.layout) {
 		case GRID:
 			pixelWidth = (config.gridWidth - 1) * config.gridSpacing;
