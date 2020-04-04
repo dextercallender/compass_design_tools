@@ -23,8 +23,6 @@
   - see other animation patterns in animation style guide
 */
 
-// TODO: Expose bezier motion curve
-
 let cnv;
 let dots = [];
 let ctrlPtDragging = null;
@@ -56,17 +54,20 @@ let Config = function() {
 	this.motionCtrlPt1 = new p5.Vector(150, 150);
 	this.motionCtrlPt2 = new p5.Vector(0, 0);
 
-	this.animationDuration = 1;
+	this.animationDuration = 0.5;
 	this.motionProgress = new MotionProgress(0,0);
 	this.animate = true;
+	this.simulatedFrameCount = 0;
 
 }
 let config = new Config();
 
 function setup() {
-	createCanvas(400, 400);
+	cnv = createCanvas(windowWidth, windowHeight)
+  cnv.parent('dot-tool-canvas');
 
 	frameRate(FRAME_RATE);
+	config.simulatedFrameCount = frameCount;
 
 	initializeConfig();
 	initializeAnimation();
@@ -75,7 +76,7 @@ function setup() {
 	gui.add(config, 'fill', [BLACK, WHITE]);
 	gui.add(config, 'layout', [GRID, CIRCLE, TRIANGLE] ).onChange(initializeConfig);
 	gui.add(config, 'animate').onChange(initializeAnimation);
-	gui.add(config, 'animationDuration', .5, 4);
+	gui.add(config, 'animationDuration', .1, 4);
 
 	var f1 = gui.addFolder('Grid');
 	f1.add(config, 'gridWidth', 1, 25).onChange(initializeConfig);
@@ -93,8 +94,9 @@ function setup() {
 }
 
 function draw() {
-	cnv = createCanvas(windowWidth, windowHeight)
-  cnv.parent('dot-tool-canvas');
+	background(255);
+
+	config.simulatedFrameCount++;
 
 	renderMotionCurveModifier();
 
@@ -103,6 +105,10 @@ function draw() {
 	}
 
 	motionCycle();
+
+	if (config.animate) {
+		gridAnimationMotionCycle();
+	}
 
 	renderGraphicCentered();
 }
@@ -116,6 +122,7 @@ class Dot {
 		this.inMotion = false;
 		this.motionSequenceIterator = -1;
 		this.motionReverse = false;
+		this.isNew = true;
 	}
 
 	enqueueMotion(x, y) {
@@ -131,41 +138,45 @@ class Dot {
 	}
 
 	move() {
-		let currentMotionX = this.motionSequence[this.motionSequenceIterator].x;
-		let currentMotionY = this.motionSequence[this.motionSequenceIterator].y;
+		if (config.motionProgress.keyframe === 0) {
+			if (!this.motionReverse) {
+				this.motionSequenceIterator++;
+			} else {
+				this.motionSequenceIterator--;
+			}
 
-		if (this.motionReverse) {
-			currentMotionX *= -1;
-			currentMotionY *= -1;
+			if (this.motionSequenceIterator === this.motionSequence.length) {
+				this.motionReverse = true;
+				this.motionSequenceIterator--;
+			}
+
+			if (this.motionSequenceIterator === -1) {
+				this.motionReverse = false;
+				this.motionSequenceIterator++;
+			}
+
+			this.departurePosition.x = this.position.x;
+			this.departurePosition.y = this.position.y;
 		}
 
-		this.position.x = this.departurePosition.x + (currentMotionX * config.motionProgress.percentTravelled);
-		this.position.y = this.departurePosition.y + (currentMotionY * config.motionProgress.percentTravelled);
+		try {	// Catch if motionSequence currently be modified in gui
+			let currentMotionX = this.motionSequence[this.motionSequenceIterator].x;
+			let currentMotionY = this.motionSequence[this.motionSequenceIterator].y;
+
+			if (this.motionReverse) {
+				currentMotionX *= -1;
+				currentMotionY *= -1;
+			}
+
+			this.position.x = this.departurePosition.x + (currentMotionX * config.motionProgress.percentTravelled);
+			this.position.y = this.departurePosition.y + (currentMotionY * config.motionProgress.percentTravelled);
+		}	catch (exception) {
+			// Do Nothing
+		}
 	}
 
-	render() {		// only function getting called every frame
+	render() {
 		if (this.inMotion) {
-			if (config.motionProgress.keyframe === 0) {
-
-				if (!this.motionReverse) {
-					this.motionSequenceIterator++;
-				} else {
-					this.motionSequenceIterator--;
-				}
-
-				if (this.motionSequenceIterator === this.motionSequence.length) {
-					this.motionReverse = true;
-					this.motionSequenceIterator--;
-				}
-
-				if (this.motionSequenceIterator === -1) {
-					this.motionReverse = false;
-					this.motionSequenceIterator++;
-				}
-
-				this.departurePosition.x = this.position.x;
-				this.departurePosition.y = this.position.y;
-			}
 			this.move();
 		}
 		if (config.fill === BLACK) { fill(0); }
@@ -208,11 +219,12 @@ function initializeConfig() {
 			intializeTriangle();
 			break;
 	}
+	if (config.animate) {
+		initializeAnimation();
+	}
 }
 
 function renderGraphicCentered() {
-
-	// TODO: Center in spite of animation
 
 	switch(config.layout) {
 		case GRID:
@@ -235,7 +247,7 @@ function renderGraphicCentered() {
 	}
 }
 
-const MODIFIER_PANE_RIGHT = 190;
+const MODIFIER_PANE_RIGHT = 170;
 const MODIFIER_PANE_BOTTOM = 200;
 const CURVE_MODIFIER_LENGTH = 150;
 const CTRL_POINT_DIAMETER = 10;
@@ -256,6 +268,9 @@ function renderMotionCurveModifier() {
 	strokeWeight(1);
 	ellipse(config.motionCtrlPt1.x, config.motionCtrlPt1.y, CTRL_POINT_DIAMETER, CTRL_POINT_DIAMETER);
 	ellipse(config.motionCtrlPt2.x, config.motionCtrlPt2.y, CTRL_POINT_DIAMETER, CTRL_POINT_DIAMETER);
+
+	textSize(14);
+	text('MOTION CURVE', 0, -20);
 	pop();
 }
 
@@ -304,7 +319,8 @@ function motionCycle() {
 
 	x = bezierPoint(CURVE_ANCHOR1.x, config.motionCtrlPt1.x, config.motionCtrlPt2.x, CURVE_ANCHOR2.x, MOTION_ITERATOR / MAX_ITERATION);
 	y = bezierPoint(CURVE_ANCHOR1.y, config.motionCtrlPt1.y, config.motionCtrlPt2.y, CURVE_ANCHOR2.y, MOTION_ITERATOR / MAX_ITERATION);
-	ellipse(x, y, 10, 10);
+	// ellipse illustrates keyframe/time on curve
+	// ellipse(x, y, 10, 10);
 
 	config.motionProgress.keyframe = MOTION_ITERATOR;
 	config.motionProgress.percentTravelled = 1 - (y / CURVE_MODIFIER_LENGTH); // acounts for flipped y-axis in p5/processing
@@ -318,24 +334,69 @@ function motionCycle() {
 }
 
 function initializeAnimation() {
-	initializeConfig();
+
+	config.simulatedFrameCount = 0;
 
 	if(config.animate) {
 		switch(config.layout) {
 			case GRID:
-				for (let i = 0; i < dots.length; i++) {
-					dots[i].enqueueMotion(config.gridSpacing, 0);
-					dots[i].enqueueMotion(0, config.gridSpacing);
-					dots[i].enqueueMotion(config.gridSpacing, 0);
+				dots = [];
+				for (let y = 0; y < config.gridHeight; y++) {
+					dots.push(new Dot(new p5.Vector(0, y * config.gridSpacing)));
 				}
-				for (let i = 0; i < dots.length; i++) {
-					dots[i].startMotionSequence();
-				}
+				gridAnimationMotionCycle();
 				break;
 			case CIRCLE:
 				break;
 			case TRIANGLE:
 				break;
+		}
+	}
+
+}
+
+function gridAnimationMotionCycle() {
+
+	if (config.motionProgress.keyframe === 0) {
+
+		// Add new dots if full grid width not created
+
+		// TODO: need to reset frameCount
+		if ( config.simulatedFrameCount / FRAME_RATE < config.gridWidth) {
+			for (let y = 0; y < config.gridHeight; y++) {
+				dots.push(new Dot(new p5.Vector(0, y * config.gridSpacing)));
+			}
+		}
+
+		// Add animation for only new dots
+		for (let i = 0; i < dots.length; i++) {
+
+			if (dots[i].isNew && i % 2 == 0) {
+
+				// TODOS:
+				// Ensure dots travel full width of grid
+				// Options: start from : top, bottom, right, left
+				// ensure grid constraints are met and allow any # of perpendicular motions to occur inbetween
+				// Allow every nth dot to be rendered
+
+				// Allow them to travel a different path backwards (motion sequence reverse)
+
+
+				dots[i].enqueueMotion(config.gridSpacing, 0);
+				dots[i].enqueueMotion(0, config.gridSpacing);
+				dots[i].enqueueMotion(config.gridSpacing, 0);
+				dots[i].enqueueMotion(config.gridSpacing, 0);
+				dots[i].enqueueMotion(0, -config.gridSpacing);
+				dots[i].enqueueMotion(config.gridSpacing, 0);
+				dots[i].enqueueMotion(config.gridSpacing, 0);
+				dots[i].enqueueMotion(0, -config.gridSpacing);
+				dots[i].enqueueMotion(config.gridSpacing, 0);
+				dots[i].enqueueMotion(0, -config.gridSpacing);
+				dots[i].enqueueMotion(config.gridSpacing, 0);
+				dots[i].startMotionSequence();
+				dots[i].isNew = false;
+			}
+
 		}
 	}
 
