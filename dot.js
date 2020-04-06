@@ -23,7 +23,7 @@
   - see other animation patterns in animation style guide
 */
 
-let cnv;
+let dotCnv;
 let dots = [];
 let ctrlPtDragging = null;
 
@@ -63,8 +63,8 @@ let Config = function() {
 let config = new Config();
 
 function setup() {
-	cnv = createCanvas(windowWidth, windowHeight)
-  cnv.parent('dot-tool-canvas');
+	dotCnv = createCanvas(windowWidth, windowHeight)
+  dotCnv.parent('dot-tool-canvas');
 
 	frameRate(FRAME_RATE);
 	config.simulatedFrameCount = frameCount;
@@ -228,8 +228,23 @@ function renderGraphicCentered() {
 
 	switch(config.layout) {
 		case GRID:
-			pixelWidth = (config.gridWidth - 1) * config.gridSpacing;
-			pixelHeight = (config.gridHeight - 1) * config.gridSpacing;
+			if (config.animate) {	// TODO: Theres something wrong with vertical (y) centering here	
+				let minPositionX = dots[0].position.x;
+				let maxPositionX = dots[0].position.x;
+				let minPositionY = dots[0].position.y;
+				let maxPositionY = dots[0].position.y;
+				for (let i = 1; i < dots.length; i++ ) {
+					if (dots[i].position.x < minPositionX) { minPositionX = dots[i].position.x; }
+					if (dots[i].position.x > maxPositionX) { maxPositionX = dots[i].position.x; }
+					if (dots[i].position.y < minPositionY) { minPositionY = dots[i].position.y; }
+					if (dots[i].position.y > maxPositionY) { maxPositionY = dots[i].position.y; }
+				}
+				pixelWidth = maxPositionX - minPositionX;
+				pixelHeight = maxPositionY - minPositionY;
+			} else {
+				pixelWidth = (config.gridWidth - 1) * config.gridSpacing;
+				pixelHeight = (config.gridHeight - 1) * config.gridSpacing;
+			}
 			push();
 			translate(windowWidth/2 - pixelWidth/2, windowHeight/2 - pixelHeight/2);
 			for (let i = 0; i < dots.length; i++ ) { dots[i].render(); }
@@ -399,7 +414,6 @@ function gridAnimationMotionCycle() {
 
 		}
 	}
-
 }
 
 function windowResized() {
