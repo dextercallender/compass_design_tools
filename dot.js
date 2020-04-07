@@ -41,6 +41,8 @@ let MotionProgress = function(keyframe, percentage) {
 	this.percentTravelled = percentage;
 }
 
+// TODO: Add invert color
+
 let Config = function() {
 	this.layout = GRID;
 	this.gridWidth = 2;		// Width = # of dots
@@ -74,7 +76,7 @@ function setup() {
 
 	var gui = new dat.GUI( {autoplace: false, width: 300 });
 	gui.add(config, 'fill', [BLACK, WHITE]);
-	gui.add(config, 'layout', [GRID, CIRCLE, TRIANGLE] ).onChange(initializeConfig);
+	gui.add(config, 'layout', [GRID, CIRCLE, TRIANGLE]).onChange(initializeConfig);
 	gui.add(config, 'animate').onChange(initializeAnimation);
 	gui.add(config, 'animationDuration', .1, 4);
 
@@ -228,7 +230,7 @@ function renderGraphicCentered() {
 
 	switch(config.layout) {
 		case GRID:
-			if (config.animate) {	// TODO: Theres something wrong with vertical (y) centering here	
+			if (config.animate) {	// TODO: Theres something wrong with vertical (y) centering here
 				let minPositionX = dots[0].position.x;
 				let maxPositionX = dots[0].position.x;
 				let minPositionY = dots[0].position.y;
