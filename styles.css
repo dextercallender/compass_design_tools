@@ -13,6 +13,11 @@ html, body {
   src: url('fonts/CompassSans-Regular.ttf');
 }
 
+@font-face {
+  font-family: 'GTPressura';
+  src: url('fonts/GTPressura-Regular.otf');
+}
+
 h1 {
 	font-size: 28px;
 	color: black;
@@ -22,6 +27,7 @@ h1 {
 h2 {
 	font-size: 24px;
 	color: black;
+	margin: 0;
 }
 
 
@@ -30,16 +36,12 @@ header {
 	position: absolute;
 	width: 75%;
 	top: 0;
-	display: flex;
 	margin: 15px;
 }
 
 header div {
 	width: 33%;
-	height: 75px;
-	padding-left: 2%;
-	/* border: 1px solid grey; */
-	transition: background-color 0.3s cubic-bezier(0.36,0.07,0.19,0.97);
+	padding-left: 2%; */
 }
 
 header div h2 {
@@ -48,7 +50,7 @@ header div h2 {
 }
 
 header div:hover {
-	background-color: grey;
+	color: grey;
 }
 
 footer {
