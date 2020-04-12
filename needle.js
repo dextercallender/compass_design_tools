@@ -7,26 +7,33 @@ const WHITE = 'WHITE';
 const INTERACTIVE = 'INTERACTIVE';
 const STATIC = 'STATIC';
 const PATTERN = 'PATTERN';
+const PATTERN1 = 'PATTERN1';
+const PATTERN2 = 'PATTERN2';
+const PATTERN3 = 'PATTERN3';
+const PATTERN4 = 'PATTERN4';
 const ANIMATED = 'ANIMATED';  // TODO
 const FRAMERATE = 90;
 
 let Config = function() {
-	this.gridWidth = 12;		// Width = # of dots
+	this.gridWidth = 12;		  // Width = # of dots
 	this.gridHeight = 12;
-	this.gridSpacing = 40; // constrain relation between grid spacing and needle length
+	this.gridSpacing = 40;    // constrain relation between grid spacing and needle length
 	this.needleLength = 20;
   this.mode = INTERACTIVE;
 	this.fill = BLACK;
   this.showAngle = false;
-  this.showVector = false; // TODO
-  this.attraction = false; // by distance
-  this.repulsion = false; // by distance
+  this.showVector = false;  // TODO
+  this.attraction = false;  // by distance
+  this.repulsion = false;   // by distance
   this.force = 20;
+  this.limit = 200;
   this.cursor = new p5.Vector(200, 200);
+  this.patternOption = PATTERN1;
   this.patternModifier = 0.03;
   this.exportWidth = 800;
   this.exportHeight = 800;
   this.filename = 'Pattern_Export,jpg';
+  // TODO: factor adjusted mouse vector into config
 }
 let config = new Config();
 
@@ -46,17 +53,25 @@ function setup() {
   initializeConfig();
 
   var gui = new dat.GUI( {autoplace: false, width: 300 });
-  gui.add(config, 'mode', [INTERACTIVE, STATIC, PATTERN]).onChange();
-  gui.add(config, 'fill', [BLACK, WHITE]);
+
   gui.add(config, 'gridWidth', 1, 25).onChange(initializeConfig);
 	gui.add(config, 'gridHeight', 1, 25).onChange(initializeConfig);
   gui.add(config, 'gridSpacing', 15, 100).onChange(initializeConfig);
   gui.add(config, 'needleLength', 3, 50).onChange(initializeConfig);
+  gui.add(config, 'mode', [INTERACTIVE, STATIC, PATTERN]).onChange(initializeConfig);
+  gui.add(config, 'fill', [BLACK, WHITE]);
   gui.add(config, 'showAngle', false);
-  gui.add(config, 'patternModifier', .001, .1).onChange(initializeConfig);
-  gui.add(config, 'attraction', false);
-  gui.add(config, 'repulsion', false);
-  gui.add(config, 'force', 5, 100);
+
+  var f1 = gui.addFolder('Interactive');
+  f1.add(config, 'attraction', false).onChange(initializeConfig);
+  f1.add(config, 'repulsion', false).onChange(initializeConfig);
+  f1.add(config, 'force', 5, 50);
+  f1.add(config, 'limit', 10, 500);
+
+  var f2 = gui.addFolder('Pattern');
+  f2.add(config, 'patternOption', [PATTERN1, PATTERN2, PATTERN3, PATTERN4]).onChange(initializeConfig);
+  f2.add(config, 'patternModifier', .001, .2).onChange(initializeConfig);
+
   gui.remember(config);
 
   initializeExportPane();
@@ -65,33 +80,25 @@ function setup() {
 function draw() {
   strokeWeight(2);
 
-  if(cursorDragging) {
-    config.cursor.set(mouseX, mouseY)
-  }
-
-  if(config.fill === BLACK) {
+  if (config.fill === BLACK) {
     background(255);
     stroke(0);
   }
-  if(config.fill === WHITE) {
+
+  if (config.fill === WHITE) {
     background(0);
     stroke(255);
   }
 
-  if(config.mode === STATIC) {
-    renderCursor();
-  }
+  if (cursorDragging) { config.cursor.set(mouseX, mouseY); }
 
-  if(config.mode === PATTERN) {
-    generatePattern();
-  }
+  if (config.mode === STATIC) { renderCursor(); }
 
-  if (config.attraction) {
-    attraction();
-  }
-  if (config.repulsion) {
-    repulsion();
-  }
+  if (config.mode === PATTERN) { generatePattern(); }
+
+  if (config.attraction) { attraction(); }
+
+  if (config.repulsion) { repulsion(); }
 
   renderGraphicCentered();
 }
@@ -99,6 +106,7 @@ function draw() {
 class Needle {
   constructor (position) {
     	this.position = position;
+      this.modifiedPosition = new p5.Vector(0, 0);
       this.rotationRadians = 0;
       this.rotationDegrees = 0;
   }
@@ -134,7 +142,13 @@ class Needle {
   render() {
     this.update();
     push();
-    translate(this.position.x, this.position.y);
+
+    if (config.attraction || config.repulsion) {
+      translate(this.modifiedPosition.x, this.modifiedPosition.y);
+    } else {
+      translate(this.position.x, this.position.y);
+    }
+
     rotate(this.rotationRadians);
     line(0, -config.needleLength / 2, 0, config.needleLength / 2);
     if (config.showAngle) {
@@ -186,16 +200,44 @@ function mouseReleased() {
 
 function generatePattern() {
   let rotationValue;
-  for (let y = 0; y < config.gridHeight; y++) {
-    for (let x = 0; x < config.gridWidth; x++) {
-      rotationValue = noise(config.patternModifier * x, config.patternModifier * y) * PI;
-      needles[floor(config.gridWidth * y) + x].setRotation(rotationValue);
-
-    }
+  switch(config.patternOption) {
+    case PATTERN1:
+      for (let y = 0; y < config.gridHeight; y++) {
+        for (let x = 0; x < config.gridWidth; x++) {
+          rotationValue = map(x, 0, config.gridWidth, 0, PI/2 * ( (config.gridWidth + 1) / config.gridWidth));
+          needles[floor(config.gridWidth * y) + x].setRotation(rotationValue);
+        }
+      }
+      break;
+    case PATTERN2:
+      for (let y = 0; y < config.gridHeight; y++) {
+        for (let x = 0; x < config.gridWidth; x++) {
+          rotationValue = map(x, 0, config.gridWidth, 0, PI * ( (config.gridWidth + 1) / config.gridWidth));
+          needles[floor(config.gridWidth * y) + x].setRotation(rotationValue);
+        }
+      }
+      break;
+    case PATTERN3:
+      for (let y = 0; y < config.gridHeight; y++) {
+        for (let x = 0; x < config.gridWidth; x++) {
+          rotationValue = map(x, 0, config.gridWidth, 0, TWO_PI * ( (config.gridWidth + 1) / config.gridWidth));
+          needles[floor(config.gridWidth * y) + x].setRotation(rotationValue);
+        }
+      }
+      break;
+    case PATTERN4:
+      for (let y = 0; y < config.gridHeight; y++) {
+        for (let x = 0; x < config.gridWidth; x++) {
+          rotationValue = noise(config.patternModifier * x, config.patternModifier * y) * PI;
+          needles[floor(config.gridWidth * y) + x].setRotation(rotationValue);
+        }
+      }
+      break;
   }
 }
 
 function attraction() {
+  let index;
   let location;
   let adjustedMouseX;
   let adjustedMouseY
@@ -203,29 +245,44 @@ function attraction() {
   let scaleVector = new p5.Vector(0,0);
   let attractionVector = new p5.Vector(0,0);
 
+  // Attraction by distance (needs to be tuned)
   for (let y = 0; y < config.gridHeight; y++) {
     for (let x = 0; x < config.gridWidth; x++) {
-      location = needles[floor(config.gridWidth * y) + x].position
+      index = floor(config.gridWidth * y) + x;
+      location = needles[index].position;
       adjustedMouseX = mouseX - windowWidth / 2 + (config.gridWidth * config.gridSpacing / 2);
       adjustedMouseY = mouseY - windowHeight / 2 + (config.gridHeight * config.gridSpacing / 2);
-      distance = (adjustedMouseX - location.x, adjustedMouseY - location.y)
-
+      distance = (adjustedMouseX - location.x, adjustedMouseY - location.y);
       vector.set(adjustedMouseX - location.x, adjustedMouseY - location.y);
       vector.normalize();
-
       scaleVector.set(abs(vector.x * config.force), abs(vector.y * config.force));
-      attractionVector = new p5.Vector
-
+      attractionVector.set(map(distance, 0, config.limit, scaleVector.x, 0), map(distance, 0, config.limit, scaleVector.y, 0));
+      if (distance < config.limit) {
+        needles[index].modifiedPosition.set(needles[index].position.x + attractionVector.x, needles[index].position.y + attractionVector.y);
+      }
     }
   }
 }
 
 function repulsion() {
+  let index;
+  let location;
+  let adjustedMouseX;
+  let adjustedMouseY
+  let vector = new p5.Vector(0,0);
+  let scaleVector = new p5.Vector(0,0);
+  let attractionVector = new p5.Vector(0,0);
+
+  // Repulsion on full grid (broken)
   for (let y = 0; y < config.gridHeight; y++) {
     for (let x = 0; x < config.gridWidth; x++) {
-      rotationValue = noise(config.patternModifier * x, config.patternModifier * y) * PI;
-      needles[floor(config.gridWidth * y) + x].setRotation(rotationValue);
-
+      index = floor(config.gridWidth * y) + x;
+      location = needles[index].position;
+      adjustedMouseX = mouseX - windowWidth / 2 + (config.gridWidth * config.gridSpacing / 2);
+      adjustedMouseY = mouseY - windowHeight / 2 + (config.gridHeight * config.gridSpacing / 2);
+      vector.set(adjustedMouseX - location.x, adjustedMouseY - location.y);
+      scaleVector.set(abs(vector.x * config.force), abs(vector.y * config.force));
+      needles[index].modifiedPosition.set(needles[index].position.x + scaleVector.x, needles[index].position.y + scaleVector.y);
     }
   }
 }
@@ -234,6 +291,9 @@ function initializeExportPane() {
   button = createButton('Export');
   button.position(windowWidth - 200, windowHeight - 200);
   button.mousePressed(exportGraphic);
+
+  // TODO: svg or png options
+  // TODO: size options
 }
 
 function exportGraphic() {
