@@ -1,29 +1,23 @@
 <html>
   <head>
     <title>Compass Pattern Tools</title>
+    <link rel="stylesheet" type="text/css" href="styles.css"> </link>
+
     <script type="text/javascript" src="lib/p5.min.js"></script>
     <script type="text/javascript" src="lib/dat.gui.min.js"></script>
     <script type="text/javascript" src="lib/jquery-3.4.1.min.js"></script>
     <script type="text/javascript" src="lib/p5.easycam.min.js"></script>
 
-    <!-- <script src="needle.js"></script> -->
-    <script src="topo.js"></script>
-    <!-- <script type="text/javascript" src="dot.js"></script> -->
-
     <script type="text/javascript" src="interact.js"></script>
-
-    <link rel="stylesheet" type="text/css" href="styles.css"> </link>
   </head>
 
   <body>
-    <!-- <header>
-      <div class="nav-option"> <h2 data-option="dot"> DOT </h2> </div>
-      <div class="nav-option"> <h2 data-option="needle"> NEEDLE </h2> </div>
-      <div class="nav-option"> <h2 data-option="topo"> TOPO </h2> </div>
-    </header> -->
-    <div class="tool-canvas" id="needle-tool-canvas"> </div>
-    <div class="tool-canvas" id="topo-tool-canvas"> </div>
-    <div class="tool-canvas" id="dot-tool-canvas"> </div>
+    <header>
+      <div class="nav-option"> <h2 data-option="dot"> Dot </h2> </div>
+      <div class="nav-option"> <h2 data-option="needle"> Needle </h2> </div>
+      <div class="nav-option"> <h2 data-option="topo"> Topo </h2> </div>
+    </header>
+    <iframe src="needle.html" id="needle"></iframe>
     <footer>
       <img src="assets/compass_logo.png" />
       <h1> pattern experiments </h1>

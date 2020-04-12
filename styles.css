@@ -7,6 +7,14 @@ html, body {
 	background-color: white;
 }
 
+iframe {
+	position: absolute;
+	width: 100%;
+	height: 100%;
+	border-width: 0;
+	border-style: none;
+}
+
 /* TYPE */
 @font-face {
   font-family: 'CompassSans';
@@ -25,32 +33,23 @@ h1 {
 }
 
 h2 {
-	font-size: 24px;
+	font-size: 16px;
 	color: black;
 	margin: 0;
 }
 
-
 /* HEADER / FOOTER */
 header {
 	position: absolute;
-	width: 75%;
+	width: 25%;
 	top: 0;
 	margin: 15px;
+	font-size: 16px;
+	z-index: 2;
 }
 
 header div {
-	width: 33%;
-	padding-left: 2%; */
-}
-
-header div h2 {
 	z-index: 2;
-	height: 100%;
-}
-
-header div:hover {
-	color: grey;
 }
 
 footer {

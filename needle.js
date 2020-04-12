@@ -305,3 +305,11 @@ function exportGraphic() {
 function windowResized() {
   resizeCanvas(windowWidth, windowHeight);
 }
+
+function mousePressed() {
+  noLoop();
+}
+
+function mouseReleased() {
+  loop();
+}
