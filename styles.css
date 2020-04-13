@@ -50,6 +50,7 @@ header {
 
 header div {
 	z-index: 2;
+	cursor: pointer;
 }
 
 footer {
