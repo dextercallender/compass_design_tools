@@ -1,6 +1,7 @@
 let needleCnv;
 let needles = [];
 let cursorDragging = false;
+let exportBuffer;
 
 const BLACK = 'BLACK';
 const WHITE = 'WHITE';
@@ -30,9 +31,9 @@ let Config = function() {
   this.cursor = new p5.Vector(200, 200);
   this.patternOption = PATTERN1;
   this.patternModifier = 0.03;
-  this.exportWidth = 800;
-  this.exportHeight = 800;
-  this.filename = 'Pattern_Export,jpg';
+  this.exportDimesions = new p5.Vector(800, 800);
+  this.filename = 'Pattern_Export';
+  this.filetype = 'png';
   // TODO: factor adjusted mouse vector into config
 }
 let config = new Config();
@@ -47,6 +48,8 @@ function preload() {
 function setup() {
   needleCnv = createCanvas(windowWidth, windowHeight)
   needleCnv.parent('needle-tool-canvas');
+  config.exportDimesions.set(windowWidth, windowHeight);
+  exportBuffer = createGraphics(config.exportDimesions.x, config.exportDimesions.y);
 
   frameRate(FRAMERATE);
 
@@ -287,23 +290,79 @@ function repulsion() {
   }
 }
 
+let inpWidth;
+let inpHeight;
+let sel;
+let button;
 function initializeExportPane() {
-  button = createButton('Export');
-  button.position(windowWidth - 200, windowHeight - 200);
-  button.mousePressed(exportGraphic);
+  inpWidth = createInput(windowWidth.toString());
+  inpWidth.position(windowWidth - 150, windowHeight - 185);
+  inpWidth.size(40, 20);
+  inpWidth.input(handleInputExportWidth);
 
-  // TODO: svg or png options
-  // TODO: size options
+  inpHeight = createInput(windowHeight.toString());
+  inpHeight.position(windowWidth - 100, windowHeight - 185);
+  inpHeight.size(40, 20);
+  inpHeight.input(handleInputExportHeight);
+
+  inpFilename = createInput(config.filename);
+  inpFilename.position(windowWidth - 150, windowHeight - 155);
+  inpFilename.size(140, 20);
+  inpFilename.input(handleInputFilename);
+
+  sel = createSelect();
+  sel.position(windowWidth - 150, windowHeight - 125);
+  sel.option('svg');
+  sel.option('png');
+  sel.changed(handleSelectFiletype);
+
+  button = createButton('Export');
+  button.position(windowWidth - 150, windowHeight - 100);
+  button.size(120, 20);
+  button.mousePressed(exportGraphic);
+}
+
+function handleInputExportWidth() { config.exportDimesions.x = this.value; }
+function handleInputExportHeight() { config.exportDimesions.y = this.value; }
+function handleSelectFiletype() { config.filetype = this.value; }
+function handleInputFilename() { config.filename = this.value; }
+
+function rePositionExportPane() {
+  inpWidth.position(windowWidth - 150, windowHeight - 185);
+  inpHeight.position(windowWidth - 100, windowHeight - 185);
+  sel.position(windowWidth - 150, windowHeight - 150);
+  inpFilename.position(windowWidth - 150, windowHeight - 155);
+  button.position(windowWidth - 150, windowHeight - 100);
+  inpWidth.value(windowWidth.toString());
+  inpHeight.value(windowHeight.toString());
 }
 
 function exportGraphic() {
-  //resizeCanvas(config.exportWidth, config.exportHeight);
-  save(needleCnv, config.filename);
-  //resizeCanvas(windowWidth, windowHeight);
+  if (!validateInput()) {
+    // TODO: indicate improper input
+    return;
+  }
+
+  if (config.exportDimesions.x === windowWidth && config.exportDimesions.y === windowHeight) {
+    save(needleCnv, config.filename + '.' + config.filetype);
+  } else {
+
+    // TODO: do the second answer
+    // use export buffer
+    // https://stackoverflow.com/questions/55211647/how-do-i-save-a-p5-js-canvas-as-a-very-large-png
+    exportBuffer.renderGraphicCentered();
+  }
+}
+
+function validateInput() {
+  // TODO: check numbers and string formatting
+  return true;
 }
 
 function windowResized() {
   resizeCanvas(windowWidth, windowHeight);
+  config.exportDimesions.set(windowWidth, windowHeight);
+  rePositionExportPane();
 }
 
 function mousePressed() {
