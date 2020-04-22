@@ -1,5 +1,7 @@
 let topoCnv;
 let points = [];
+let intersectingPointsIndices = [];
+let pointGroups = [];
 let maxPointHeight;
 let minPointHeight;
 let planes = [];
@@ -18,6 +20,7 @@ let Config = function() {
   this.planeSpacing = 10;
   this.varyPlaneSpeed = false;
   this.fill = BLACK;
+	this.pause = false;
 }
 let config = new Config();
 
@@ -35,6 +38,7 @@ function setup() {
   gui.add(config, 'noiseX',0.001, 0.02).onChange(initializeConfig);
   gui.add(config, 'noiseY',0.001, 0.02).onChange(initializeConfig);
   gui.add(config, 'fill', [BLACK, WHITE]);
+	gui.add(config, 'pause', false);
 
   Dw.EasyCam.prototype.apply = function(n) {
    var o = this.cam;
@@ -54,11 +58,15 @@ function draw() {
     background(0);
   }
 
-  performIntersection();
-
+	if (!config.pause) {
+  	performIntersection();
+		groupPointsPerPlane();
+	}
   renderGraphicCentered();
 
-  updatePlanes();
+	if (!config.pause) {
+  	updatePlanes();
+	}
 }
 
 class Point {
@@ -105,13 +113,17 @@ function initializeConfig() {
 }
 
 function performIntersection() {
+	intersectingPointsIndices = [];	// group intersecting poitns by z-indices
   let intersecting;
   let j;
   for (let i = 0; i < points.length; i++) {
     intersecting = false;
     j = 0;
     while (j < planes.length && !intersecting) {
-      if (round(points[i].position.z) === round(planes[j].z)) {
+
+			// TODO: compare to the heightest precision
+			// TODO: or some relatively high precision to smooth out the data
+      if (round(points[i].position.z) === round(planes[j].z, 1)) {
         intersecting = true;
       }
       j++;
@@ -123,7 +135,8 @@ function performIntersection() {
     }
     if (intersecting) {
       points[i].display = true;
-      points[i].displayColor = fillColor
+      points[i].displayColor = fillColor;
+			intersectingPointsIndices.push(i);
     } else {
       points[i].display = false;
 
@@ -131,9 +144,59 @@ function performIntersection() {
   }
 }
 
+function groupPointsPerPlane() {
+
+	/* group by z indices first */
+
+	// also its not just distance threshold of 20, you must find the next closest point
+
+	/*
+		Distance matrix
+
+		 p1 p2 p3 p4 p5 p6 p7
+	p1 0  3	 2  6  8  1  7
+ 	p2  	0  5  7  2  4  9
+	p3       0  5
+	p4         0
+	p5            0
+	p6               0
+	p7                 0
+
+	only compute triange from matrix
+	find point that starts closest to an edge where x = 0, y = 0, x = length, y = length
+	use the matrix
+
+	*/
+
+	/* wrong algorithm */
+	/* destructive of intersectingPointsIndices */
+	pointGroups = [];
+	let currentPt;
+	let group;
+	let remainingPointCount = intersectingPointsIndices.length;
+	let i = 0;
+	while (i < remainingPointCount) {
+		currentPt = points[i];
+		group = [currentPt];
+		remainingPointCount = intersectingPointsIndices.length;
+		let j = i + 1;
+		while (j < remainingPointCount) {
+			if ( dist(currentPt.position.x, currentPt.position.y, points[j].position.x, points[j].position.y) < 20 ) {
+				group.push(points[j]);
+				intersectingPointsIndices.splice(j, 1);
+			}
+			remainingPointCount = intersectingPointsIndices.length;
+			j++;
+		}
+		console.log(group.length);
+		pointGroups.push(group);
+		i++;
+	}
+}
+
 function updatePlanes() {
   for (let i = 0; i < planes.length; i++) {
-    planes[i].z += 1;
+		planes[i].z += 1;
     if (planes[i].z > maxPointHeight) {
       planes[i].z = minPointHeight;
     }
