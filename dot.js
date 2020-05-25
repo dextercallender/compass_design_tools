@@ -92,6 +92,9 @@ function setup() {
 
 	var f3 = gui.addFolder('Triangle');
 
+	//TODO - red bounding box around edge of screen if graphic exceeds limit.
+	//TODO - also limit the slider max value at that point
+
 	gui.remember(config);
 }
 
