@@ -12,11 +12,11 @@ const BLACK = 'BLACK';
 const WHITE = 'WHITE';
 
 let Config = function() {
-	this.gridWidth = 150;		  // Width = # of dots
-	this.gridHeight = 150;
+	this.gridWidth = 170;		  // Width = # of dots
+	this.gridHeight = 170;
   this.topoHeight = 200;
-  this.noiseX = 0.01;
-  this.noiseY = 0.009;
+  this.noiseX = 0.011;
+  this.noiseY = 0.012;
   this.planeSpacing = 10;
   this.varyPlaneSpeed = false;
   this.fill = BLACK;
@@ -32,8 +32,8 @@ function setup() {
 
   var gui = new dat.GUI( {autoplace: false, width: 300 });
 
-  gui.add(config, 'gridWidth', 50, 200).onChange(initializeConfig);
-	gui.add(config, 'gridHeight', 50, 200).onChange(initializeConfig);
+  gui.add(config, 'gridWidth', 50, 210).onChange(initializeConfig);
+	gui.add(config, 'gridHeight', 50, 210).onChange(initializeConfig);
   gui.add(config, 'topoHeight',50, 250).onChange(initializeConfig);
   gui.add(config, 'noiseX',0.001, 0.02).onChange(initializeConfig);
   gui.add(config, 'noiseY',0.001, 0.02).onChange(initializeConfig);
@@ -45,7 +45,9 @@ function setup() {
    n = n || o.renderer,
      n && (this.camEYE = this.getPosition(this.camEYE), this.camLAT = this.getCenter(this.camLAT), this.camRUP = this.getUpVector(this.camRUP), n._curCamera.camera(this.camEYE[0], this.camEYE[1], this.camEYE[2], this.camLAT[0], this.camLAT[1], this.camLAT[2], this.camRUP[0], this.camRUP[1], this.camRUP[2]))
  };
- easycam = createEasyCam({distance: 225});
+ easycam = createEasyCam({distance: 250});
+
+
 
 }
 
@@ -188,7 +190,7 @@ function groupPointsPerPlane() {
 			remainingPointCount = intersectingPointsIndices.length;
 			j++;
 		}
-		console.log(group.length);
+		// console.log(group.length);
 		pointGroups.push(group);
 		i++;
 	}

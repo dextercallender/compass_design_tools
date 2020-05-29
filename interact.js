@@ -3,7 +3,7 @@ $(document).ready(function() {
 	const NEEDLE = 'needle';
 	const DOT = 'dot';
 	const TOPO = 'topo';
-	currentTool = NEEDLE;
+	currentTool = TOPO;
 	needleIframe = `<iframe src="needle.html" id="${NEEDLE}"></iframe>`;
 	dotIframe = `<iframe src="dot.html" id="${DOT}"></iframe>`;
 	topoIframe = `<iframe src="topo.html" id="${TOPO}"></iframe>`;
