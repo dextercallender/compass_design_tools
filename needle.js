@@ -295,31 +295,31 @@ let inpHeight;
 let sel;
 let button;
 function initializeExportPane() {
-  inpWidth = createInput(windowWidth.toString());
-  inpWidth.position(windowWidth - 150, windowHeight - 185);
-  inpWidth.size(40, 20);
-  inpWidth.input(handleInputExportWidth);
+  // inpWidth = createInput(windowWidth.toString());
+  // inpWidth.position(windowWidth - 150, windowHeight - 185);
+  // inpWidth.size(40, 20);
+  // inpWidth.input(handleInputExportWidth);
 
-  inpHeight = createInput(windowHeight.toString());
-  inpHeight.position(windowWidth - 100, windowHeight - 185);
-  inpHeight.size(40, 20);
-  inpHeight.input(handleInputExportHeight);
+  // inpHeight = createInput(windowHeight.toString());
+  // inpHeight.position(windowWidth - 100, windowHeight - 185);
+  // inpHeight.size(40, 20);
+  // inpHeight.input(handleInputExportHeight);
 
-  inpFilename = createInput(config.filename);
-  inpFilename.position(windowWidth - 150, windowHeight - 155);
-  inpFilename.size(140, 20);
-  inpFilename.input(handleInputFilename);
+  // inpFilename = createInput(config.filename);
+  // inpFilename.position(windowWidth - 150, windowHeight - 155);
+  // inpFilename.size(140, 20);
+  // inpFilename.input(handleInputFilename);
 
-  sel = createSelect();
-  sel.position(windowWidth - 150, windowHeight - 125);
-  sel.option('svg');
-  sel.option('png');
-  sel.changed(handleSelectFiletype);
+  // sel = createSelect();
+  // sel.position(windowWidth - 150, windowHeight - 125);
+  // sel.option('svg');
+  // sel.option('png');
+  // sel.changed(handleSelectFiletype);
 
-  button = createButton('Export');
-  button.position(windowWidth - 150, windowHeight - 100);
-  button.size(120, 20);
-  button.mousePressed(exportGraphic);
+  // button = createButton('Export');
+  // button.position(windowWidth - 150, windowHeight - 100);
+  // button.size(120, 20);
+  // button.mousePressed(exportGraphic);
 }
 
 function handleInputExportWidth() { config.exportDimesions.x = this.value; }
