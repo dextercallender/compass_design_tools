@@ -55,18 +55,18 @@ function setup() {
 
   initializeConfig();
 
-  var gui = new dat.GUI( {autoplace: false, width: 300 });
+  // var gui = new dat.GUI( {autoplace: false, width: 300 });
 
-  gui.add(config, 'gridWidth', 1, 25).onChange(initializeConfig);
-	gui.add(config, 'gridHeight', 1, 25).onChange(initializeConfig);
-  gui.add(config, 'gridSpacing', 15, 100).onChange(initializeConfig);
-  gui.add(config, 'needleLength', 3, 75).onChange(initializeConfig);
+  // gui.add(config, 'gridWidth', 1, 25).onChange(initializeConfig);
+	// gui.add(config, 'gridHeight', 1, 25).onChange(initializeConfig);
+  // gui.add(config, 'gridSpacing', 15, 100).onChange(initializeConfig);
+  // gui.add(config, 'needleLength', 3, 75).onChange(initializeConfig);
   // gui.add(config, 'mode', [INTERACTIVE, STATIC, PATTERN]).onChange(initializeConfig);
-  gui.add(config, 'fill', [BLACK, WHITE]);
-  gui.add(config, 'showAngle', false);
+  // gui.add(config, 'fill', [BLACK, WHITE]);
+  // gui.add(config, 'showAngle', false);
 
-  var f1 = gui.addFolder('Experiments');
-  f1.add(config, 'attraction', false).onChange(initializeConfig);
+  // var f1 = gui.addFolder('Experiments');
+  // f1.add(config, 'attraction', false).onChange(initializeConfig);
   // f1.add(config, 'repulsion', false).onChange(initializeConfig);
   // f1.add(config, 'force', 5, 50);
   // f1.add(config, 'limit', 10, 500);
@@ -75,7 +75,7 @@ function setup() {
   // f2.add(config, 'patternOption', [PATTERN1, PATTERN2, PATTERN3, PATTERN4]).onChange(initializeConfig);
   // f2.add(config, 'patternModifier', .001, .2).onChange(initializeConfig);
 
-  gui.remember(config);
+  // gui.remember(config);
 
   initializeExportPane();
 }

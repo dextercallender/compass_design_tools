@@ -69,7 +69,7 @@
           </div>
           <div class="parameter">
             <label>STROKE CAP</label>
-            <input type="radio" id="strokecap-round" name="strokecap"/>
+            <input type="radio" id="strokecap-round" name="strokecap" checked/>
             <p>round</p>
             <input type="radio" id="strokecap-square" name="strokecap"/>
             <p>square</p>
@@ -80,8 +80,9 @@
       <section>
         <h2 class="title">PATTERN</h2>
         <div class="parameter-container">
-          <div class="parameter">
-            <div id="pattern-toggle">
+          <div class="parameter parameter-xlarge">
+            <label>MODE</label>
+            <div class="button-toggle" id="pattern-toggle">
               <div class="selected"><img class="icon" id="mouse-icon" src="assets/mouse.svg"/></div>
               <div><img class="icon" id="pattern-icon" src="assets/pattern_icon.svg"/></div>
             </div>
@@ -118,7 +119,24 @@
       <section>
         <h2 class="title">EXPORT</h2>
         <div class="parameter-container">
-
+          <div class="parameter">
+            <label>NAME</label>
+            <input type="text" id="file_name" name="strokecap"/>
+            <input type="radio" id="strokecap-round" name="filetype" checked/>
+            <p class="selected">png</p>
+            <input type="radio" id="strokecap-square" name="filetype"/>
+            <p>jpg</p>
+          </div>
+          <!-- <div class="parameter parameter-xlarge" id="size-toggle-parameter">
+            <label>SIZE</label>
+            <div class="button-toggle" id="size-toggle">
+              <div class="selected"> </div>
+              <div> </div>
+            </div>
+          </div> -->
+          <div class="parameter">
+            <button>EXPORT</button>
+          </div>
         </div>
       </section>
 

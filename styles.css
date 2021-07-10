@@ -28,7 +28,7 @@ iframe {
 }
 
 h1 {
-	font-size: 14px;
+	font-size: 15px;
 	color: black;
 	margin: 0;
 	font-weight: normal;
@@ -38,7 +38,7 @@ h2 {
 	font-size: 12px;
 	color: black;
 	margin: 0;
-	font-weight: 600;
+	font-weight: 800;
 }
 
 .number {
@@ -50,9 +50,9 @@ h2 {
 /* HEADER */
 
 header {
-	position: relative;
+	position: absolute;
 	width: 335px;
-	margin-top: 20px;
+	margin-top: 35px;
 	padding: 0 20px;
 	z-index: 3;
 }
@@ -83,9 +83,9 @@ footer {
 
 .sidebar {
 	min-width: 375px;
-	height: calc(100vh - 150px);
-	padding-top: 75px;
-	padding-bottom: 75px;
+	height: calc(100vh - 170px);
+	padding-top: 85px;
+	padding-bottom: 85px;
 	position: fixed;
 	left: 0;
 	top: 0;
@@ -94,7 +94,7 @@ footer {
 	justify-content: space-between;
 
 	backdrop-filter: blur(2px);
-	background-color: rgb(250, 250, 250);
+	background-color: rgb(247, 247, 247);
 	z-index: 2;
 	border-right: 1px solid rgb(182, 182, 182);
 }
@@ -105,23 +105,39 @@ section {
 
 section .title {
 	text-align: center;
+	margin-bottom: 8px;
 }
 
 section .parameter-container {
 	border: 1px solid #CCCBCB;
 	border-radius: 20px;
 	width: 82%;
-	margin-left: 5%;
+	margin-left: 4.5%;
 	padding: 4%;
+	background-color: rgb(241,241,241);
+}
+
+section .parameter-container:hover {
+	transition: background-color .2s ease;
+	background-color: rgb(236,236,236);
 }
 
 section .parameter {
-	width: 92%;
+	width: 100%;
 	height: 38px;
+	position: relative;
 }
 
 section .parameter-large {
-	height: 50px;
+	height: 60px;
+}
+
+section .parameter-xlarge {
+	height: 62px;
+}
+
+section .parameter-xlarge label:first-child {
+	margin-bottom: 6px;
 }
 
 .parameter label, .parameter input, .parameter h3, .parameter p {
@@ -132,6 +148,10 @@ section .parameter-large {
 .parameter label {
 	font-size: 12px;
 	font-family: 'CompassSans';
+}
+
+.parameter label:first-child {
+	width: 50px;
 }
 
 .parameter p {
@@ -145,11 +165,25 @@ section .parameter-large {
 }
 
 .parameter input[type="radio"] {
-	margin-top: 0px;
+	margin-top: 1px;
+	margin-left: 12px;
+	filter: grayscale(.2); 
 }
 
 .parameter input[type="range"] {
 	margin-top: 0px;
+}
+
+.parameter input[type="text"] {
+	margin-left: 10px;
+	border: none;
+	border-bottom: 1px solid #636363;
+	background-color: #e4e4e4;
+	/* background-color: rgb(241,241,241); */
+	height: 20px;
+	width: 120px;	
+	font-family: "CompassSans";
+	border-radius: 2px;
 }
 
 /* SLIDER */
@@ -193,7 +227,7 @@ section .parameter-large {
 
 /* PATTERN TOGGLE */
 
-#pattern-toggle {
+.button-toggle {
 	width: 78px;
 	height: 30px;
 	background-color: #d3d3d3;
@@ -202,32 +236,31 @@ section .parameter-large {
 	display: flex;
 }
 
-#pattern-toggle div {
+.button-toggle div {
 	position: relative;
 	height: 100%;
 	width: 50%;
 	background-color: #d3d3d3;
 	border-radius: 7px;
-	/* transition: background-color .2s ease-in; */
 }
 
-#pattern-toggle div:first-child {
+.button-toggle div:first-child {
 	border-right: 1px solid #636363;
 	border-top-right-radius: 0px;
 	border-bottom-right-radius: 0px;
 }
 
-#pattern-toggle div:nth-child(2) {
+.button-toggle div:nth-child(2) {
 	border-top-left-radius: 0px;
 	border-bottom-left-radius: 0px;
 }
 
-#pattern-toggle div:hover {
+.button-toggle div:hover {
 	cursor: pointer;
 	background-color: #c8c8c8;	
 }
 
-#pattern-toggle div.selected {
+.button-toggle div.selected {
 	background-color: #b4b4b4;	
 }
 
@@ -250,7 +283,7 @@ section .parameter-large {
 /* PATTERN OPTIONS TABLE */
 
 #pattern-table {
-	width: 280px;
+	width: 100%;
 	border: 1px solid #636363;
 	border-radius: 7px;
 	background-color: #e4e4e4;
@@ -263,7 +296,7 @@ section .parameter-large {
 	vertical-align: middle;
 	text-align: center;
 	width: 12.5%;
-	height: 24px;
+	height: 28px;
 	border-right: 1px solid #636363;
 }
 
@@ -275,6 +308,22 @@ section .parameter-large {
 	border-bottom: 1px solid #636363;
 }
 
+#pattern-table tr:first-child td:first-child {
+	border-top-left-radius: 7px;
+}
+
+#pattern-table tr:first-child td:last-child {
+	border-top-right-radius: 7px;
+}
+
+#pattern-table tr:last-child td:first-child {
+	border-bottom-left-radius: 7px;
+}
+
+#pattern-table tr:last-child td:last-child {
+	border-bottom-right-radius: 7px;
+}
+
 #pattern-table td:hover {
 	cursor: pointer;
 	background-color: #d5d5d5;
@@ -282,4 +331,36 @@ section .parameter-large {
 
 #pattern-table td.selected {
 	background-color: #b4b4b4;
+}
+
+#size-toggle-parameter {
+	margin-top: 9px;
+}
+
+#size-toggle {
+
+}
+
+.parameter button {
+	position: absolute;
+	right: 0;
+	bottom: 50%;
+	transform: translateY(50%);
+	width: 100px;
+	height: 28px;
+	border-radius: 7px;
+	border: 1px solid #c4c4c4;
+	font-family: "CompassSans";
+	font-size: 12px;
+	background-color: #e5e5e5;
+	/* transition: background-color .5 ease; */
+}
+
+.parameter button:focus {
+	outline: 0;
+}
+
+.parameter button:hover {
+	cursor: pointer;
+	background-color: #f5f5f5;
 }
