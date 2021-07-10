@@ -327,15 +327,15 @@ function handleInputExportHeight() { config.exportDimesions.y = this.value; }
 function handleSelectFiletype() { config.filetype = this.value; }
 function handleInputFilename() { config.filename = this.value; }
 
-function rePositionExportPane() {
-  inpWidth.position(windowWidth - 150, windowHeight - 185);
-  inpHeight.position(windowWidth - 100, windowHeight - 185);
-  sel.position(windowWidth - 150, windowHeight - 150);
-  inpFilename.position(windowWidth - 150, windowHeight - 155);
-  button.position(windowWidth - 150, windowHeight - 100);
-  inpWidth.value(windowWidth.toString());
-  inpHeight.value(windowHeight.toString());
-}
+// function rePositionExportPane() {
+//   inpWidth.position(windowWidth - 150, windowHeight - 185);
+//   inpHeight.position(windowWidth - 100, windowHeight - 185);
+//   sel.position(windowWidth - 150, windowHeight - 150);
+//   inpFilename.position(windowWidth - 150, windowHeight - 155);
+//   button.position(windowWidth - 150, windowHeight - 100);
+//   inpWidth.value(windowWidth.toString());
+//   inpHeight.value(windowHeight.toString());
+// }
 
 function exportGraphic() {
   if (!validateInput()) {

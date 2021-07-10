@@ -13,10 +13,49 @@
 
   <body>
     <header>
-      <!-- <div class="nav-option"> <h2 data-option="dot"> Dot </h2> </div> -->
-      <div class="nav-option"> <h2 data-option="needle"> Needle </h2> </div>
-      <!-- <div class="nav-option"> <h2 data-option="topo"> Topo </h2> </div> -->
+      <h1> Needle Tool</h1>
+      <div class="tooltip-container">
+        <img src="assets/tooltip.svg" id="tooltip" />
+      </div>
     </header>
+
+    <div class="sidebar">
+
+      <section>
+        <h2 class="title">GRID</h2>
+        <div class="parameter-container">
+          <div class="parameter">
+            <label>WIDTH</label>
+            <input type="range" min="1" max="100" value="30" class="slider" />
+            <h3 class="number"> 14 </h3>
+            <p>needles</p>
+          </div>
+        </div>
+      </section>
+
+      <section>
+        <h2 class="title">NEEDLE</h2>
+        <div class="parameter-container">
+
+        </div>
+      </section>
+
+      <section>
+        <h2 class="title">PATTERN</h2>
+        <div class="parameter-container">
+
+        </div>
+      </section>
+
+      <section>
+        <h2 class="title">EXPORT</h2>
+        <div class="parameter-container">
+
+        </div>
+      </section>
+
+    </div>
+
     <iframe src="needle.html" id="needle"></iframe>
   </body>
 

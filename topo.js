@@ -47,8 +47,6 @@ function setup() {
  };
  easycam = createEasyCam({distance: 250});
 
-
-
 }
 
 function draw() {
