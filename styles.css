@@ -28,7 +28,7 @@ iframe {
 }
 
 h1 {
-	font-size: 16px;
+	font-size: 14px;
 	color: black;
 	margin: 0;
 	font-weight: normal;
@@ -61,6 +61,10 @@ header .tooltip-container {
 	position: absolute;
 	right: 20px;
 	top: 0;
+}
+
+header .tooltip-container:hover {
+	cursor: pointer;
 }
 
 footer {
@@ -116,6 +120,10 @@ section .parameter {
 	height: 38px;
 }
 
+section .parameter-large {
+	height: 50px;
+}
+
 .parameter label, .parameter input, .parameter h3, .parameter p {
 	display: inline-block;
 	vertical-align: middle;
@@ -134,6 +142,14 @@ section .parameter {
 .parameter .slider-value {
 	border-bottom: 1px solid black;
 	margin-left: 13px;
+}
+
+.parameter input[type="radio"] {
+	margin-top: 0px;
+}
+
+.parameter input[type="range"] {
+	margin-top: 0px;
 }
 
 /* SLIDER */
@@ -175,3 +191,95 @@ section .parameter {
   cursor: pointer;
 }
 
+/* PATTERN TOGGLE */
+
+#pattern-toggle {
+	width: 78px;
+	height: 30px;
+	background-color: #d3d3d3;
+	border-radius: 7px;
+	border: 1px solid #636363;
+	display: flex;
+}
+
+#pattern-toggle div {
+	position: relative;
+	height: 100%;
+	width: 50%;
+	background-color: #d3d3d3;
+	border-radius: 7px;
+	/* transition: background-color .2s ease-in; */
+}
+
+#pattern-toggle div:first-child {
+	border-right: 1px solid #636363;
+	border-top-right-radius: 0px;
+	border-bottom-right-radius: 0px;
+}
+
+#pattern-toggle div:nth-child(2) {
+	border-top-left-radius: 0px;
+	border-bottom-left-radius: 0px;
+}
+
+#pattern-toggle div:hover {
+	cursor: pointer;
+	background-color: #c8c8c8;	
+}
+
+#pattern-toggle div.selected {
+	background-color: #b4b4b4;	
+}
+
+#pattern-toggle .icon {
+	position: absolute;
+	top: 50%;
+	left: 50%;
+	transform: translate(-50%, -50%);
+}
+
+#mouse-icon {
+	width: 15px;
+	margin-left: 3px;
+}
+
+#pattern-icon {
+	width: 28px;
+}
+
+/* PATTERN OPTIONS TABLE */
+
+#pattern-table {
+	width: 280px;
+	border: 1px solid #636363;
+	border-radius: 7px;
+	background-color: #e4e4e4;
+	border-spacing: 0;
+	margin-top: 5px;
+}
+
+#pattern-table td {
+	color: #636363;
+	vertical-align: middle;
+	text-align: center;
+	width: 12.5%;
+	height: 24px;
+	border-right: 1px solid #636363;
+}
+
+#pattern-table tr td:last-child {
+	border-right: none;
+}
+
+#pattern-table tr:first-child td {
+	border-bottom: 1px solid #636363;
+}
+
+#pattern-table td:hover {
+	cursor: pointer;
+	background-color: #d5d5d5;
+}
+
+#pattern-table td.selected {
+	background-color: #b4b4b4;
+}

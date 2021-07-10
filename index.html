@@ -56,16 +56,22 @@
           </div>
           <div class="parameter">
             <label>COLOR</label>
-            <input type="radio" id="color-black"/>
+            <input type="radio" id="color-black" checked name="color"/>
             <p>black</p>
-            <input type="radio" id="color-white"/>
+            <input type="radio" id="color-white" name="color"/>
             <p>white</p>
           </div>
           <div class="parameter">
+            <label>WEIGHT</label>
+            <input type="range" min="1" max="10" value="1" class="slider" id="weight" /> 
+            <h3 class="number slider-value"> 1 </h3>
+            <p>pixels</p>           
+          </div>
+          <div class="parameter">
             <label>STROKE CAP</label>
-            <input type="radio" id="strokecap-round"/>
+            <input type="radio" id="strokecap-round" name="strokecap"/>
             <p>round</p>
-            <input type="radio" id="strokecap-square"/>
+            <input type="radio" id="strokecap-square" name="strokecap"/>
             <p>square</p>
           </div>
         </div>
@@ -75,10 +81,36 @@
         <h2 class="title">PATTERN</h2>
         <div class="parameter-container">
           <div class="parameter">
-
+            <div id="pattern-toggle">
+              <div class="selected"><img class="icon" id="mouse-icon" src="assets/mouse.svg"/></div>
+              <div><img class="icon" id="pattern-icon" src="assets/pattern_icon.svg"/></div>
+            </div>
           </div>
-          <div class="parameter">
-            
+          <div class="parameter parameter-large">
+            <table id="pattern-table">
+              <tbody>
+                <tr>
+                  <td class="number selected">1</td>
+                  <td class="number">2</td>
+                  <td class="number">3</td>
+                  <td class="number">4</td>
+                  <td class="number">5</td>
+                  <td class="number">6</td>
+                  <td class="number">7</td>
+                  <td class="number">8</td>
+                </tr>
+                <tr>
+                  <td class="number">9</td>
+                  <td class="number">10</td>
+                  <td class="number">11</td>
+                  <td class="number"> 12</td>
+                  <td class="number">13</td>
+                  <td class="number">14</td>
+                  <td class="number">15</td>
+                  <td class="number">16</td>
+                </tr>
+              </tbody>
+            </table>
           </div>
         </div>
       </section>
