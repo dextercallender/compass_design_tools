@@ -16,7 +16,7 @@ const ANIMATED = 'ANIMATED';  // TODO
 const FRAMERATE = 90;
 
 let Config = function() {
-	this.gridWidth = 12;		  // Width = # of dots
+	this.gridWidth = 12;		  // Width = # of needles
 	this.gridHeight = 12;
 	this.gridSpacing = 40;    // constrain relation between grid spacing and needle length
 	this.needleLength = 20;
@@ -37,6 +37,15 @@ let Config = function() {
   // TODO: factor adjusted mouse vector into config
 }
 let config = new Config();
+
+// Event Listeners
+console.log('attach slider event')
+console.log($('#slider-width'))
+$('#slider-width').on("change mousemove", function() {
+  console.log('something')
+})
+
+
 
 let cursorBlack;
 let cursorWhite;
