@@ -51,21 +51,67 @@ h2 {
 
 header {
 	position: absolute;
-	width: 335px;
+	width: calc(400px * .83);
 	margin-top: 35px;
-	padding: 0 20px;
+	padding: 0 calc(400px * .075);
 	z-index: 3;
+	transition: all 1.2s cubic-bezier(0.23, 1, 0.320, 1);
 }
 
-header .tooltip-container {
+header h1 {
+	opacity: 1;
+	transition: opacity .5s ease;
+}
+
+header .icon {
 	position: absolute;
-	right: 20px;
-	top: 0;
+	height: 25px;
+	transition: all .2s ease;
 }
 
-header .tooltip-container:hover {
+header .icon:hover {
 	cursor: pointer;
+	transform: scale(1.15);
 }
+
+header #openclose-panel-container {
+	top: -1px;
+	right: 50px;
+}
+
+header #tooltip-container {
+	top: -2px;
+	right: 20px;
+	transition: all .2s ease;
+}
+
+#tooltip {
+	height: 21px;
+}
+
+#openclose-icon {
+	height: 20px;
+	transition: transform .2s ease;
+}
+
+.header-close {
+	width: 20px;
+}
+
+.header-close h1 {
+	opacity: 0;
+}
+
+.header-close #tooltip-container {
+	right: 52px;
+	top: 32px;
+}
+
+.header-close #openclose-icon {
+	transform: rotate(180deg);
+}
+
+/* FOOTER */
 
 footer {
 	position: absolute;
@@ -82,7 +128,7 @@ footer {
 /* SIDEBAR */
 
 .sidebar {
-	min-width: 375px;
+	width: 410px;
 	height: calc(100vh - 170px);
 	padding-top: 85px;
 	padding-bottom: 85px;
@@ -94,9 +140,14 @@ footer {
 	justify-content: space-between;
 
 	backdrop-filter: blur(2px);
-	background-color: rgb(247, 247, 247);
+	background-color: rgba(247, 247, 247, .2);
 	z-index: 2;
 	border-right: 1px solid rgb(182, 182, 182);
+	transition: transform 1.2s cubic-bezier(0.23, 1, 0.320, 1);
+}
+
+.sidebar-close {
+	transform: translateX(-375px);
 }
 
 section {
@@ -111,20 +162,20 @@ section .title {
 section .parameter-container {
 	border: 1px solid #CCCBCB;
 	border-radius: 20px;
-	width: 82%;
-	margin-left: 4.5%;
+	width: 76%;
+	margin-left: 7%;
 	padding: 4%;
-	background-color: rgb(241,241,241);
+	background-color: rgba(236,236,236, .2);
+	backdrop-filter: blur(4px);
 }
 
 section .parameter-container:hover {
 	transition: background-color .2s ease;
-	background-color: rgb(236,236,236);
+	background-color: rgba(236,236,236, .8);
 }
 
 section .parameter {
 	width: 100%;
-	height: 38px;
 	position: relative;
 }
 
@@ -193,9 +244,9 @@ section .parameter-xlarge label:first-child {
   width: 145px;
   height: 20px;
   background: #d1d1d1;
-	border: 1px solid #636363;
+	/* border: 1px solid #636363; */
 	border-radius: 4px;
-	outline: none;
+	/* outline: none; */
 	opacity: 0.7;
   -webkit-transition: .2s ease-in;
 	transition: opacity .2s ease-in;
@@ -210,12 +261,13 @@ section .parameter-xlarge label:first-child {
 .slider::-webkit-slider-thumb {
   -webkit-appearance: none;
   appearance: none;
-  width: 20px;
+  width: 32px;
   height: 18px;
   background: #E4E4E4;
   cursor: pointer;
   border: 1px solid #BEBABA;
 	border-radius: 3px;
+	/* margin-left: 5px; */
 }
 
 .slider::-moz-range-thumb {
@@ -224,6 +276,11 @@ section .parameter-xlarge label:first-child {
   background: #E4E4E4;
   cursor: pointer;
 }
+
+/* .slider::-webkit-slider-runnable-track {
+	height: 12px;
+} */
+
 
 /* PATTERN TOGGLE */
 
@@ -342,12 +399,10 @@ section .parameter-xlarge label:first-child {
 }
 
 .parameter button {
-	position: absolute;
-	right: 0;
-	bottom: 50%;
-	transform: translateY(50%);
+	position: relative;
 	width: 100px;
-	height: 28px;
+	height: 30px;
+	margin-left: 200px;
 	border-radius: 7px;
 	border: 1px solid #c4c4c4;
 	font-family: "CompassSans";

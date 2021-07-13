@@ -22,6 +22,8 @@ let Config = function() {
 	this.needleLength = 20;
   this.mode = INTERACTIVE;
 	this.fill = BLACK;
+  this.needleWeight = 2;
+  this.needleCap = p5.ROUND
   this.showAngle = false;
   this.showVector = false;  // TODO
   this.attraction = false;  // by distance
@@ -36,16 +38,7 @@ let Config = function() {
   this.filetype = 'png';
   // TODO: factor adjusted mouse vector into config
 }
-let config = new Config();
-
-// Event Listeners
-console.log('attach slider event')
-console.log($('#slider-width'))
-$('#slider-width').on("change mousemove", function() {
-  console.log('something')
-})
-
-
+var config = new Config();
 
 let cursorBlack;
 let cursorWhite;
@@ -64,14 +57,7 @@ function setup() {
 
   initializeConfig();
 
-  // var gui = new dat.GUI( {autoplace: false, width: 300 });
-
-  // gui.add(config, 'gridWidth', 1, 25).onChange(initializeConfig);
-	// gui.add(config, 'gridHeight', 1, 25).onChange(initializeConfig);
-  // gui.add(config, 'gridSpacing', 15, 100).onChange(initializeConfig);
-  // gui.add(config, 'needleLength', 3, 75).onChange(initializeConfig);
   // gui.add(config, 'mode', [INTERACTIVE, STATIC, PATTERN]).onChange(initializeConfig);
-  // gui.add(config, 'fill', [BLACK, WHITE]);
   // gui.add(config, 'showAngle', false);
 
   // var f1 = gui.addFolder('Experiments');
@@ -90,17 +76,10 @@ function setup() {
 }
 
 function draw() {
-  strokeWeight(2);
+  strokeWeight(config.needleWeight);
+  strokeCap(config.needleCap);
 
-  if (config.fill === BLACK) {
-    background(255);
-    stroke(0);
-  }
-
-  if (config.fill === WHITE) {
-    background(0);
-    stroke(255);
-  }
+  clearScreen();
 
   if (cursorDragging) { config.cursor.set(mouseX, mouseY); }
 
@@ -191,6 +170,27 @@ function renderGraphicCentered() {
   translate(windowWidth/2 - ((config.gridWidth * config.gridSpacing) / 2) , windowHeight/2 - ((config.gridHeight * config.gridSpacing) / 2));
   for (let i = 0; i < needles.length; i++ ) { needles[i].render(); }
   pop();
+}
+
+function clearScreen() {
+
+  // TODO smooth transition between white and black background
+  if (config.fill === BLACK) {
+    background(255);
+    stroke(0);
+  }
+  if (config.fill === WHITE) {
+    background(0);
+    stroke(255);
+  }
+}
+
+function refreshGraphic() {
+  strokeWeight(config.needleWeight)
+  strokeCap(config.needleCap)
+  initializeConfig()
+  clearScreen()
+  renderGraphicCentered()
 }
 
 function renderCursor() {

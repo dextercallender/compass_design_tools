@@ -1,37 +1,68 @@
 $(document).ready(function() {
 
-	const NEEDLE = 'needle';
-	const DOT = 'dot';
-	const TOPO = 'topo';
-	currentTool = NEEDLE;
-	needleIframe = `<iframe src="needle.html" id="${NEEDLE}"></iframe>`;
-	dotIframe = `<iframe src="dot.html" id="${DOT}"></iframe>`;
-	topoIframe = `<iframe src="topo.html" id="${TOPO}"></iframe>`;
+	// SLIDERS
 
-	$('div.nav-option').click((event) => {
-		toolSelection = event.target.dataset.option;
-		if (toolSelection && toolSelection != currentTool) {
-			$(`#${currentTool}`).remove();
-			switch (toolSelection) {
-				case NEEDLE:
-					$(needleIframe).appendTo('body');
-					currentTool = NEEDLE;
-					break;
-				case DOT:
-					$(dotIframe).appendTo('body');
-					currentTool = DOT;
-					break;
-				case TOPO:
-					$(topoIframe).appendTo('body');
-					currentTool = TOPO;
-					break;
-			}
+	new WebkitInputRangeFillLower(
+		{
+			selectors: ['slider-width', 'slider-height', 'slider-spacing'], 
+			degree: 165,
+			gradient: '#c73e1d 0%, #a23b72 12%, #2e86ab 100%',
 		}
-	});
+	);
+	
 
+	// INTRO ANIMATION
+
+	$('header').removeClass('header-close')
+	$('.sidebar').removeClass('sidebar-close')
 
 	// NEEDLE PARAMETER PANE
 
-	
+	// Event Listeners
+	$('#slider-width').on("input change", evt => {
+		config.gridWidth = parseInt(evt.target.value)
+		refreshGraphic()
+	})
+
+	$('#slider-height').on("input change", evt => {
+		config.gridHeight = parseInt(evt.target.value)
+		refreshGraphic()
+	})
+
+	$('#slider-spacing').on("input change", evt => {
+		config.gridSpacing = parseInt(evt.target.value)
+		refreshGraphic()
+	})
+
+	$('#slider-length').on("input change", evt => {
+		config.needleLength = parseInt(evt.target.value)
+		refreshGraphic()
+	})
+
+	$('input[name=color]').on("change", () => {
+		config.fill = $('#input-color-black').prop('checked') ? BLACK : WHITE;
+	})
+
+	$('#slider-weight').on("input change", evt => {
+		config.needleWeight = parseInt(evt.target.value)
+		refreshGraphic()
+	})
+
+	$('input[name=strokecap]').on("change", () => {
+		config.needleCap = $('#input-strokecap-round').prop('checked') ? ROUND : SQUARE;
+	})
+
+
+	// GENERAL PANE CONTROLS
+
+	$('#openclose-panel-container').on("click", () => {
+		if ($('.sidebar').attr("class").split(/\s+/).includes('sidebar-close')) {
+			$('.sidebar').removeClass('sidebar-close')
+			$('header').removeClass('header-close')
+		} else {
+			$('.sidebar').addClass('sidebar-close')
+			$('header').addClass('header-close')
+		}
+	})
 
 });
