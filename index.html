@@ -4,10 +4,9 @@
     <link rel="stylesheet" type="text/css" href="styles.css"> </link>
 
     <script type="text/javascript" src="lib/p5.min.js"></script>
-    <script type="text/javascript" src="lib/dat.gui.min.js"></script>
     <script type="text/javascript" src="lib/jquery-3.4.1.min.js"></script>
     <script type="text/javascript" src="lib/p5.easycam.min.js"></script>
-    <script type="text/javascript" src="lib/webkit-input-range-fill-lower.min.js"></script>
+    <script type="text/javascript" src="lib/webkit-input-range-fill-lower.js"></script>
 
     <script type="text/javascript" src="needle.js"></script>
     <script type="text/javascript" src="interact.js"></script>
@@ -26,6 +25,29 @@
       </div>
     </header>
 
+    <div id="tooltip-pane" class="show">
+      <h3>How To Use</h3>
+      <div>
+
+      </div>
+      <div id="tutorial-animation">
+
+      </div>
+      <div id="tutorial-description">
+
+      </div>
+      <h3>Interactive & Pattern Mode</h3>
+      <div>
+
+      </div>
+      <h3>Export</h3>
+      <div>
+        <p>1.&emsp;Enter a filename for your design.</p>
+        <p>2.&emsp;Select a file type.</p>
+        <p>3.&emsp;Click EXPORT.</p>
+      </div>
+    </div>
+
     <div class="sidebar sidebar-close">
 
       <section>
@@ -34,19 +56,19 @@
           <div class="parameter">
             <label>WIDTH</label>
             <input type="range" min="1" max="50" value="12" class="slider" id="slider-width" />
-            <h3 class="number slider-value"> 14 </h3>
+            <h3 class="number slider-value" id="width-value"> 14 </h3>
             <p>needles</p>
           </div>
           <div class="parameter">
             <label>HEIGHT</label>
             <input type="range" min="1" max="50" value="12" class="slider" id="slider-height"/>
-            <h3 class="number slider-value"> 14 </h3>
+            <h3 class="number slider-value" id="height-value"> 14 </h3>
             <p>needles</p>
           </div>
           <div class="parameter">
             <label>SPACING</label>
             <input type="range" min="1" max="70" value="40" class="slider" id="slider-spacing"/>
-            <h3 class="number slider-value"> 14 </h3>
+            <h3 class="number slider-value" id="spacing-value"> 14 </h3>
             <p>pixels</p>
           </div>
         </div>
@@ -58,7 +80,7 @@
           <div class="parameter">
             <label>LENGTH</label>
             <input type="range" min="1" max="100" value="30" class="slider" id="slider-length" />
-            <h3 class="number slider-value"> 14 </h3>
+            <h3 class="number slider-value" id="length-value"> 14 </h3>
             <p>pixels</p>
           </div>
           <div class="parameter">
@@ -70,8 +92,8 @@
           </div>
           <div class="parameter">
             <label>WEIGHT</label>
-            <input type="range" min="1" max="5" value="1" class="slider" id="slider-weight" /> 
-            <h3 class="number slider-value"> 1 </h3>
+            <input type="range" min="1" max="5" value="2" class="slider" id="slider-weight" /> 
+            <h3 class="number slider-value" id="weight-value"> 1 </h3>
             <p>pixels</p>           
           </div>
           <div class="parameter">
@@ -90,8 +112,8 @@
           <div class="parameter parameter-xlarge">
             <label>MODE</label>
             <div class="button-toggle" id="pattern-toggle">
-              <div class="selected"><img class="icon" id="mouse-icon" src="assets/mouse.svg"/></div>
-              <div><img class="icon" id="pattern-icon" src="assets/pattern_icon.svg"/></div>
+              <div id="mouse-icon-div" class="selected"></div>
+              <div id="pattern-icon-div"></div>
             </div>
           </div>
           <div class="parameter parameter-large">
@@ -104,18 +126,14 @@
                   <td class="number">4</td>
                   <td class="number">5</td>
                   <td class="number">6</td>
-                  <td class="number">7</td>
-                  <td class="number">8</td>
                 </tr>
                 <tr>
+                  <td class="number">7</td>
+                  <td class="number">8</td>
                   <td class="number">9</td>
                   <td class="number">10</td>
                   <td class="number">11</td>
-                  <td class="number"> 12</td>
-                  <td class="number">13</td>
-                  <td class="number">14</td>
-                  <td class="number">15</td>
-                  <td class="number">16</td>
+                  <td class="number">12</td>
                 </tr>
               </tbody>
             </table>

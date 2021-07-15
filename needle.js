@@ -12,6 +12,18 @@ const PATTERN1 = 'PATTERN1';
 const PATTERN2 = 'PATTERN2';
 const PATTERN3 = 'PATTERN3';
 const PATTERN4 = 'PATTERN4';
+const PATTERN5 = 'PATTERN5';
+const PATTERN6 = 'PATTERN6';
+const PATTERN7 = 'PATTERN7';
+const PATTERN8 = 'PATTERN8';
+const PATTERN9 = 'PATTERN9';
+const PATTERN10 = 'PATTERN10';
+const PATTERN11 = 'PATTERN11';
+const PATTERN12 = 'PATTERN12';
+const PATTERN13 = 'PATTERN13';
+const PATTERN14 = 'PATTERN14';
+const PATTERN15 = 'PATTERN15';
+const PATTERN16 = 'PATTERN16';
 const ANIMATED = 'ANIMATED';  // TODO
 const FRAMERATE = 90;
 
@@ -32,7 +44,7 @@ let Config = function() {
   this.limit = 200;
   this.cursor = new p5.Vector(200, 200);
   this.patternOption = PATTERN1;
-  this.patternModifier = 0.03;
+  this.patternModifier = 0.06;
   this.exportDimesions = new p5.Vector(800, 800);
   this.filename = 'Pattern_Export';
   this.filetype = 'png';
@@ -56,21 +68,6 @@ function setup() {
   frameRate(FRAMERATE);
 
   initializeConfig();
-
-  // gui.add(config, 'mode', [INTERACTIVE, STATIC, PATTERN]).onChange(initializeConfig);
-  // gui.add(config, 'showAngle', false);
-
-  // var f1 = gui.addFolder('Experiments');
-  // f1.add(config, 'attraction', false).onChange(initializeConfig);
-  // f1.add(config, 'repulsion', false).onChange(initializeConfig);
-  // f1.add(config, 'force', 5, 50);
-  // f1.add(config, 'limit', 10, 500);
-
-  // var f2 = gui.addFolder('Pattern');
-  // f2.add(config, 'patternOption', [PATTERN1, PATTERN2, PATTERN3, PATTERN4]).onChange(initializeConfig);
-  // f2.add(config, 'patternModifier', .001, .2).onChange(initializeConfig);
-
-  // gui.remember(config);
 
   initializeExportPane();
 }
@@ -232,7 +229,7 @@ function generatePattern() {
     case PATTERN3:
       for (let y = 0; y < config.gridHeight; y++) {
         for (let x = 0; x < config.gridWidth; x++) {
-          rotationValue = map(x, 0, config.gridWidth, 0, TWO_PI * ( (config.gridWidth + 1) / config.gridWidth));
+          rotationValue = map(x + (config.gridWidth/2), 0, config.gridWidth, 0, PI * ( (config.gridWidth + 1) / config.gridWidth));
           needles[floor(config.gridWidth * y) + x].setRotation(rotationValue);
         }
       }
@@ -240,7 +237,71 @@ function generatePattern() {
     case PATTERN4:
       for (let y = 0; y < config.gridHeight; y++) {
         for (let x = 0; x < config.gridWidth; x++) {
-          rotationValue = noise(config.patternModifier * x, config.patternModifier * y) * PI;
+          rotationValue = map(x, 0, config.gridWidth, 0, TWO_PI * ( (config.gridWidth + 1) / config.gridWidth));
+          needles[floor(config.gridWidth * y) + x].setRotation(rotationValue);
+        }
+      }
+      break;
+    case PATTERN5:
+      for (let y = 0; y < config.gridHeight; y++) {
+        for (let x = 0; x < config.gridWidth; x++) {
+          rotationValue = map(y, 0, config.gridHeight, 0, PI * ( (config.gridHeight + 1) / config.gridHeight));
+          needles[floor(config.gridWidth * y) + x].setRotation(rotationValue);
+        }
+      }
+      break;
+    case PATTERN6:
+      for (let y = 0; y < config.gridHeight; y++) {
+        for (let x = 0; x < config.gridWidth; x++) {
+          rotationValue = map(y, 0, config.gridHeight, 0, TWO_PI * ( (config.gridHeight + 1) / config.gridHeight));
+          needles[floor(config.gridWidth * y) + x].setRotation(rotationValue);
+        }
+      }
+      break;
+    case PATTERN7:
+      for (let y = 0; y < config.gridHeight; y++) {
+        for (let x = 0; x < config.gridWidth; x++) {
+          rotationValue = map(y + (config.gridHeight/2), 0, config.gridHeight, 0, PI * ( (config.gridHeight) / config.gridHeight));
+          needles[floor(config.gridWidth * y) + x].setRotation(rotationValue);
+        }
+      }
+      break;
+    case PATTERN8:
+      for (let y = 0; y < config.gridHeight; y++) {
+        for (let x = 0; x < config.gridWidth; x++) {
+          rotationValue = map(y, 0, config.gridHeight, 0, PI/2 * ( (config.gridHeight) / config.gridHeight));
+          needles[floor(config.gridWidth * y) + x].setRotation(rotationValue);
+        }
+      }
+      break;
+    case PATTERN9:
+      for (let y = 0; y < config.gridHeight; y++) {
+        for (let x = 0; x < config.gridWidth; x++) {
+          rotationValue = noise(config.patternModifier * x, config.patternModifier * y) * PI * (7/4);
+          needles[floor(config.gridWidth * y) + x].setRotation(rotationValue);
+        }
+      }
+      break;
+    case PATTERN10:
+      for (let y = 0; y < config.gridHeight; y++) {
+        for (let x = 0; x < config.gridWidth; x++) {
+          rotationValue = noise((config.patternModifier + .05) * x, config.patternModifier * y) * PI * (7/4);
+          needles[floor(config.gridWidth * y) + x].setRotation(rotationValue);
+        }
+      }
+      break;
+    case PATTERN11:
+      for (let y = 0; y < config.gridHeight; y++) {
+        for (let x = 0; x < config.gridWidth; x++) {
+          rotationValue = noise((config.patternModifier) * x, config.patternModifier + .07 * y) * TWO_PI * (7/4);
+          needles[floor(config.gridWidth * y) + x].setRotation(rotationValue);
+        }
+      }
+      break;
+    case PATTERN12:
+      for (let y = 0; y < config.gridHeight; y++) {
+        for (let x = 0; x < config.gridWidth; x++) {
+          rotationValue = noise((config.patternModifier + .09) * x, config.patternModifier + .07 * y) * PI;
           needles[floor(config.gridWidth * y) + x].setRotation(rotationValue);
         }
       }
@@ -336,16 +397,6 @@ function handleInputExportHeight() { config.exportDimesions.y = this.value; }
 function handleSelectFiletype() { config.filetype = this.value; }
 function handleInputFilename() { config.filename = this.value; }
 
-// function rePositionExportPane() {
-//   inpWidth.position(windowWidth - 150, windowHeight - 185);
-//   inpHeight.position(windowWidth - 100, windowHeight - 185);
-//   sel.position(windowWidth - 150, windowHeight - 150);
-//   inpFilename.position(windowWidth - 150, windowHeight - 155);
-//   button.position(windowWidth - 150, windowHeight - 100);
-//   inpWidth.value(windowWidth.toString());
-//   inpHeight.value(windowHeight.toString());
-// }
-
 function exportGraphic() {
   if (!validateInput()) {
     // TODO: indicate improper input
@@ -371,7 +422,6 @@ function validateInput() {
 function windowResized() {
   resizeCanvas(windowWidth, windowHeight);
   config.exportDimesions.set(windowWidth, windowHeight);
-  rePositionExportPane();
 }
 
 function mousePressed() {
