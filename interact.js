@@ -14,7 +14,7 @@ $(document).ready(function() {
 
 	$('header').removeClass('header-close')
 	$('.sidebar').removeClass('sidebar-close')
-
+	$('#tooltip-pane').addClass('tooltip-pane-show')
 
 	// $('#slider-width').on('input', ()=>{alert('trigger')})
 
@@ -90,9 +90,35 @@ $(document).ready(function() {
 		config.patternOption = patternMap[$(evt.target).html()]
 	})
 
+	// NEEDLE TOOLTIP PANE
+
+	const tutorialVideo = {
+		width: 'assets/width_video_800x800.mp4',
+		height: 'assets/height_video_800x800.mp4',
+		spacing: 'assets/spacing_video_800x800.mp4',
+		length: 'assets/length_video_800x800.mp4',
+		weight: 'assets/weight_video_800x800.mp4',
+	}
+
+	const tutorialText = {
+		width: "The width slider controls the number of needles in a row of the grid.",
+		height: "The height slider controls the number of needles in a column of the grid.",
+		spacing: "The spacing slider controls the number of pixels between each needle.",
+		length: "The length slider controls the length of each needle in pixels.",
+		weight: "The weight slider controls the weight of each needle in pixels.",
+	}
+
+	$('#tooltip-howto-buttons div').on('click', (evt) => {
+		$('#tooltip-howto-buttons div').removeClass('selected')
+		$(evt.target).addClass('selected')
+		const dataOption = $(evt.target).data('option')
+		$('#tutorial-animation video').attr('src', tutorialVideo[dataOption]);
+		$('#tutorial-description p').html(tutorialText[dataOption])
+	})
+
 	// GENERAL PANE CONTROLS
 
-	$('#openclose-panel-container').on("click", () => {
+	$('#openclose-panel-container').on('click', () => {
 		if ($('.sidebar').attr("class").split(/\s+/).includes('sidebar-close')) {
 			$('.sidebar').removeClass('sidebar-close')
 			$('header').removeClass('header-close')
@@ -100,6 +126,18 @@ $(document).ready(function() {
 			$('.sidebar').addClass('sidebar-close')
 			$('header').addClass('header-close')
 		}
+	})
+
+	$('#tooltip-container').on('click', () => {
+		if ($('#tooltip-pane').attr("class").split(/\s+/).includes('tooltip-pane-show')) {
+			$('#tooltip-pane').removeClass('tooltip-pane-show')
+		} else {
+			$('#tooltip-pane').addClass('tooltip-pane-show')
+		}
+	})
+
+	$('#tooltip-pane .close-icon').on('click', () => {
+		$('#tooltip-pane').removeClass('tooltip-pane-show')
 	})
 
 });

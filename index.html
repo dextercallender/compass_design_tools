@@ -25,22 +25,45 @@
       </div>
     </header>
 
-    <div id="tooltip-pane" class="show">
+    <div id="tooltip-pane" class="">
       <h3>How To Use</h3>
-      <div>
-
-      </div>
-      <div id="tutorial-animation">
-
+      <div class="close-icon"></div>
+      <p style="text-align: center;">Sliders</p>
+      <div id="tooltip-howto-buttons">
+        <div class="selected" data-option="width"> </div>
+        <div data-option="height"> </div> 
+        <div data-option="spacing"> </div> 
+        <div data-option="length"> </div>
+        <div data-option="weight"> </div> 
       </div>
       <div id="tutorial-description">
-
+        <p>The width slider controls the number of needles in a row of the grid.</p>
+      </div>
+      <div id="tutorial-animation">
+        <video src="assets/width_video_800x800.mp4"  playsInline="true" autoPlay="true" muted="true" loop="true"/>
       </div>
       <h3>Interactive & Pattern Mode</h3>
       <div>
-
+        <div class="parameter" id="tutorial-pattern-toggle">
+          <label>MODE</label>
+          <div class="button-toggle" id="tutorial-button-toggle">
+            <div id="mouse-icon-div"></div>
+            <div id="pattern-icon-div"></div>
+          </div>
+        </div>
       </div>
-      <h3>Export</h3>
+      <div>
+        <p style="line-height: 20px; margin-bottom: 20px;">
+          In <span>Interactive Mode</span> the needles will follow the cursor. <br />
+          Double-click on the canvas to set a point of focus for the needles.
+          Right-click to release the point of focus.
+        </p>
+        <p style="line-height: 20px;">
+          In <span>Pattern Mode</span> choose from a selection of 12 scalable pre-built 
+          patterns.
+        </p>
+      </div>
+      <h3 style="margin-top: 25px;">Export</h3>
       <div>
         <p>1.&emsp;Enter a filename for your design.</p>
         <p>2.&emsp;Select a file type.</p>
