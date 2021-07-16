@@ -14,7 +14,9 @@ $(document).ready(function() {
 
 	$('header').removeClass('header-close')
 	$('.sidebar').removeClass('sidebar-close')
-	$('#tooltip-pane').addClass('tooltip-pane-show')
+	setTimeout(() => {
+		$('#tooltip-pane').addClass('tooltip-pane-show')
+	}, 200)
 
 	// $('#slider-width').on('input', ()=>{alert('trigger')})
 

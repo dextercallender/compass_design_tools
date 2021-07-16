@@ -464,10 +464,10 @@ section .parameter-xlarge label:first-child {
 	content: "";
 	position: absolute;
 	top: 30px;                    
-	margin-top: -15px;                 
-	left: -30px;
-	border: solid 15px transparent;
-	border-right-color: rgb(222, 222, 222, .5);
+	margin-top: -20px;                 
+	left: -38px;
+	border: solid 20px transparent;
+	border-right-color: rgb(245, 245, 245);
 	z-index: 3;
 }
 
