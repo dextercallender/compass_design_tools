@@ -446,7 +446,7 @@ section .parameter-xlarge label:first-child {
 #tooltip-pane {
 	position: absolute;
 	width: 368px;
-	height: 840px;
+	height: 835px;
 	left: 430px;
 	top: 15px;
 	background-color: rgb(243, 243, 243, .8);
@@ -495,7 +495,6 @@ section .parameter-xlarge label:first-child {
 	font-family: "CompassSans";
 	font-weight: 400;
 	font-size: 13px;
-	/* text-decoration: underline; */
 	border-bottom: 1px solid black;
 	text-align: center;
 	margin: 20px 0 25px 0;
@@ -503,7 +502,7 @@ section .parameter-xlarge label:first-child {
 }
 
 #tooltip-pane h3:first-child {
-	/* margin-top: 0; */
+	margin-top: 15px;
 }
 
 #tooltip-pane p {
@@ -576,7 +575,7 @@ section .parameter-xlarge label:first-child {
 }
 
 #tooltip-howto-buttons div.selected {
-	transition: background-color .5s ease;
+	transition: background-color 1.2s ease;
 	background-color: rgba(120, 120, 120, 0.856);	
 }
 
@@ -617,4 +616,11 @@ section .parameter-xlarge label:first-child {
 #tutorial-animation video {
 	width: 260px;
 	height: 260px;
+	transition: opacity .4s ease;
+	opacity: 1;
+}
+
+#tutorial-animation video.fadeout {
+	transition: opacity .15s ease;
+	opacity: 0;
 }

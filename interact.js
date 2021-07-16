@@ -112,9 +112,23 @@ $(document).ready(function() {
 		$('#tooltip-howto-buttons div').removeClass('selected')
 		$(evt.target).addClass('selected')
 		const dataOption = $(evt.target).data('option')
-		$('#tutorial-animation video').attr('src', tutorialVideo[dataOption]);
+		$('#tutorial-animation video').addClass('fadeout')
+		setTimeout(() => {
+			$('#tutorial-animation video').attr('src', tutorialVideo[dataOption]);
+			setTimeout(() => {
+				$('#tutorial-animation video').removeClass('fadeout')
+			}, 100)
+		}, 300)
 		$('#tutorial-description p').html(tutorialText[dataOption])
 	})
+
+	// automatically rotate 
+	const tutorialOptions = $('#tooltip-howto-buttons div')
+	let i = 1;
+	setInterval(() => {
+		$(tutorialOptions[i % tutorialOptions.length]).trigger('click');
+		i++;
+	}, 4000)
 
 	// GENERAL PANE CONTROLS
 
