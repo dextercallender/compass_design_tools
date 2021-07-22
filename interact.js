@@ -1,5 +1,7 @@
 $(document).ready(function() {
 
+	document.addEventListener('contextmenu', event => event.preventDefault());
+
 	// SLIDERS
 
 	new WebkitInputRangeFillLower(
@@ -92,6 +94,10 @@ $(document).ready(function() {
 		config.patternOption = patternMap[$(evt.target).html()]
 	})
 
+	$('#size-toggle div').on("click", evt => {
+
+	})
+
 	// NEEDLE TOOLTIP PANE
 
 	const tutorialVideo = {
@@ -154,6 +160,12 @@ $(document).ready(function() {
 
 	$('#tooltip-pane .close-icon').on('click', () => {
 		$('#tooltip-pane').removeClass('tooltip-pane-show')
+	})
+
+	$('#export-button').on('click', () => {
+		const fileName = $("#file_name").val() ? $("#file_name").text() : 'Asset'
+		const fileExtension = $('input[name=filetype]:checked').data('type')
+		saveCanvas(needleCnv, fileName, fileExtension)
 	})
 
 });

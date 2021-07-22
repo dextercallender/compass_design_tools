@@ -42,9 +42,9 @@ h2 {
 }
 
 .number {
-	font-family: 'GTPressura';
-	font-size: 13px;
-	font-weight: 400;
+	font-family: 'GTPressura' !important;
+	font-size: 13px !important;
+	font-weight: 400 !important;
 	user-select: none;
 }
 
@@ -130,7 +130,7 @@ footer {
 
 .sidebar {
 	width: 410px;
-	height: calc(100vh - 170px);
+	height: calc(100vh - 135px);
 	padding-top: 85px;
 	padding-bottom: 85px;
 	position: fixed;
@@ -157,7 +157,7 @@ section {
 
 section .title {
 	text-align: center;
-	margin-bottom: 8px;
+	margin-bottom: 4px;
 }
 
 section .parameter-container {
@@ -307,15 +307,22 @@ section .parameter-xlarge label:first-child {
 	border-radius: 7px;
 }
 
-.button-toggle div:first-child {
+.button-toggle div {
 	border-right: 1px solid #636363;
 	border-top-right-radius: 0px;
 	border-bottom-right-radius: 0px;
 }
 
-.button-toggle div:nth-child(2) {
+.button-toggle div p {
+	margin-top: 5px;
+	margin-left: 12px;
+	color: #636363;
+}
+
+.button-toggle div:last-child {
 	border-top-left-radius: 0px;
 	border-bottom-left-radius: 0px;
+	border-right: none;
 }
 
 .button-toggle div:hover {
@@ -325,6 +332,10 @@ section .parameter-xlarge label:first-child {
 
 .button-toggle div.selected {
 	background-color: rgba(120, 120, 120, 0.856);	
+}
+
+.button-toggle div.selected p {
+	color: white;
 }
 
 .button-toggle #mouse-icon-div {
@@ -416,7 +427,7 @@ section .parameter-xlarge label:first-child {
 }
 
 #size-toggle {
-
+	width: 120px;
 }
 
 .parameter button {

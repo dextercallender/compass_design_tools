@@ -56,7 +56,7 @@
         <p style="line-height: 20px; margin-bottom: 20px;">
           In <span>Interactive Mode</span> the needles will follow the cursor. <br />
           Double-click on the canvas to set a point of focus for the needles.
-          Right-click to release the point of focus.
+          Click again to release the point of focus.
         </p>
         <p style="line-height: 20px;">
           In <span>Pattern Mode</span> choose from a selection of 12 scalable pre-built 
@@ -78,13 +78,13 @@
         <div class="parameter-container">
           <div class="parameter">
             <label>WIDTH</label>
-            <input type="range" min="1" max="50" value="12" class="slider" id="slider-width" />
+            <input type="range" min="1" max="25" value="12" class="slider" id="slider-width" />
             <h3 class="number slider-value" id="width-value"> 14 </h3>
             <p>needles</p>
           </div>
           <div class="parameter">
             <label>HEIGHT</label>
-            <input type="range" min="1" max="50" value="12" class="slider" id="slider-height"/>
+            <input type="range" min="1" max="25" value="12" class="slider" id="slider-height"/>
             <h3 class="number slider-value" id="height-value"> 14 </h3>
             <p>needles</p>
           </div>
@@ -170,20 +170,21 @@
           <div class="parameter">
             <label>NAME</label>
             <input type="text" id="file_name" name="strokecap"/>
-            <input type="radio" id="strokecap-round" name="filetype" checked/>
+            <input type="radio" id="strokecap-round" name="filetype" data-type="png" checked/>
             <p class="selected">png</p>
-            <input type="radio" id="strokecap-square" name="filetype"/>
+            <input type="radio" id="strokecap-square" data-type="jpg" name="filetype"/>
             <p>jpg</p>
           </div>
-          <!-- <div class="parameter parameter-xlarge" id="size-toggle-parameter">
+          <div class="parameter parameter-xlarge" id="size-toggle-parameter">
             <label>SIZE</label>
             <div class="button-toggle" id="size-toggle">
-              <div class="selected"> </div>
-              <div> </div>
+              <div class="selected"> <p class="number"> 1x </p> </div>
+              <div> <p class="number"> 2x </p> </div>
+              <div> <p class="number"> 4x </p> </div>
             </div>
-          </div> -->
+          </div>
           <div class="parameter">
-            <button>EXPORT</button>
+            <button id="export-button">EXPORT</button>
           </div>
         </div>
       </section>
