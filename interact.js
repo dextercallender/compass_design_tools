@@ -163,9 +163,11 @@ $(document).ready(function() {
 	})
 
 	$('#export-button').on('click', () => {
-		const fileName = $("#file_name").val() ? $("#file_name").text() : 'Asset'
+		const fileName = $("#file_name").val().length > 0 ? $("#file_name").val() : 'Asset'
 		const fileExtension = $('input[name=filetype]:checked').data('type')
-		saveCanvas(needleCnv, fileName, fileExtension)
+		hideCursor()
+		saveCanvas(fileName, fileExtension)
+		unhideCursor()
 	})
 
 });

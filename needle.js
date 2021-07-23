@@ -28,8 +28,8 @@ const ANIMATED = 'ANIMATED';  // TODO
 const FRAMERATE = 90;
 
 let Config = function() {
-	this.gridWidth = 12;		  // Width = # of needles
-	this.gridHeight = 12;
+	this.gridWidth = 5;		  // Width = # of needles
+	this.gridHeight = 5;
 	this.gridSpacing = 40;    // constrain relation between grid spacing and needle length
 	this.needleLength = 20;
   this.mode = INTERACTIVE;
@@ -48,6 +48,7 @@ let Config = function() {
   this.exportDimesions = new p5.Vector(800, 800);
   this.filename = 'Pattern_Export';
   this.filetype = 'png';
+  this.hideCursor = false;
   // TODO: factor adjusted mouse vector into config
 }
 var config = new Config();
@@ -192,10 +193,10 @@ function refreshGraphic() {
 }
 
 function renderCursor() {
-  if (config.fill === BLACK) {
+  if (config.fill === BLACK && !config.hideCursor) {
     image(cursorBlack, config.cursor.x, config.cursor.y, 25, 25);
   }
-  if (config.fill === WHITE) {
+  if (config.fill === WHITE && !config.hideCursor) {
     image(cursorWhite, config.cursor.x, config.cursor.y, 25, 25);
   }
 }
@@ -417,4 +418,12 @@ function setInteractiveMode() {
   if (config.mode == INTERACTIVE || config.mode == STATIC) {
     config.mode = INTERACTIVE
   }
+}
+
+function hideCursor() {
+  config.hideCursor = true;
+}
+
+function unhideCursor() {
+  config.hideCursor = false;
 }
