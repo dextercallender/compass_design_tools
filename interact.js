@@ -89,13 +89,19 @@ $(document).ready(function() {
 	}
 
 	$('td').on("click", (evt) => {
+		if ($('#mouse-icon-div').hasClass('selected')) {
+			$('#mouse-icon-div').removeClass('selected')
+			$('#pattern-icon-div').addClass('selected')
+			config.mode = PATTERN
+		}
+
 		$('td').removeClass('selected')
 		$(evt.target).addClass('selected')
 		config.patternOption = patternMap[$(evt.target).html()]
 	})
 
 	$('#size-toggle div').on("click", evt => {
-
+		
 	})
 
 	// NEEDLE TOOLTIP PANE

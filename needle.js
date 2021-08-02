@@ -28,8 +28,8 @@ const ANIMATED = 'ANIMATED';  // TODO
 const FRAMERATE = 90;
 
 let Config = function() {
-	this.gridWidth = 5;		  // Width = # of needles
-	this.gridHeight = 5;
+	this.gridWidth = 14;		  // Width = # of needles
+	this.gridHeight = 14;
 	this.gridSpacing = 40;    // constrain relation between grid spacing and needle length
 	this.needleLength = 20;
   this.mode = INTERACTIVE;
@@ -77,7 +77,7 @@ function setup() {
 function draw() {
   strokeWeight(config.needleWeight);
   strokeCap(config.needleCap);
-
+  smooth();
   clearScreen();
 
   if (cursorDragging) { config.cursor.set(mouseX, mouseY); }
@@ -279,7 +279,7 @@ function generatePattern() {
     case PATTERN9:
       for (let y = 0; y < config.gridHeight; y++) {
         for (let x = 0; x < config.gridWidth; x++) {
-          rotationValue = noise(config.patternModifier * x, config.patternModifier * y) * PI * (7/4);
+          rotationValue = noise(.07 * x, config.patternModifier * y) * 2 * PI;
           needles[floor(config.gridWidth * y) + x].setRotation(rotationValue);
         }
       }
@@ -295,7 +295,7 @@ function generatePattern() {
     case PATTERN11:
       for (let y = 0; y < config.gridHeight; y++) {
         for (let x = 0; x < config.gridWidth; x++) {
-          rotationValue = noise((config.patternModifier) * x, config.patternModifier + .07 * y) * TWO_PI * (7/4);
+          rotationValue = noise(.02 * x,  .08 * y) * TWO_PI * (7/4);
           needles[floor(config.gridWidth * y) + x].setRotation(rotationValue);
         }
       }
@@ -422,6 +422,7 @@ function setInteractiveMode() {
 
 function hideCursor() {
   config.hideCursor = true;
+  draw()
 }
 
 function unhideCursor() {
