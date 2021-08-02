@@ -338,13 +338,13 @@ section .parameter-xlarge label:first-child {
 	color: white;
 }
 
-.button-toggle #mouse-icon-div {
+.button-toggle #mouse-icon-div, #mouse-icon-div-tutorial {
 	background-image: url("assets/mouse.svg");
 	background-repeat: no-repeat;
 	background-position: 65% 50%;
 }
 
-.button-toggle #pattern-icon-div {
+.button-toggle #pattern-icon-div, #pattern-icon-div-tutorial {
 	background-image: url("assets/pattern_icon.svg");
 	background-repeat: no-repeat;
 	background-position: 65% 50%;
