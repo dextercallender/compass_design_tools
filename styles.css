@@ -151,6 +151,10 @@ footer {
 	transform: translateX(-375px);
 }
 
+@media screen and (max-width : 768px) {
+
+}
+
 section {
 	width: 100%;
 }

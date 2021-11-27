@@ -172,7 +172,6 @@ function renderGraphicCentered() {
 }
 
 function clearScreen() {
-
   // TODO smooth transition between white and black background
   if (config.fill === BLACK) {
     background(255);
@@ -367,31 +366,12 @@ let inpHeight;
 let sel;
 let button;
 
-function handleInputExportWidth() { config.exportDimesions.x = this.value; }
-function handleInputExportHeight() { config.exportDimesions.y = this.value; }
-function handleSelectFiletype() { config.filetype = this.value; }
-function handleInputFilename() { config.filename = this.value; }
-
 function exportGraphic() {
-  if (!validateInput()) {
-    // TODO: indicate improper input
-    return;
-  }
-
   if (config.exportDimesions.x === windowWidth && config.exportDimesions.y === windowHeight) {
     save(needleCnv, config.filename + '.' + config.filetype);
   } else {
-
-    // TODO: do the second answer
-    // use export buffer
-    // https://stackoverflow.com/questions/55211647/how-do-i-save-a-p5-js-canvas-as-a-very-large-png
     exportBuffer.renderGraphicCentered();
   }
-}
-
-function validateInput() {
-  // TODO: check numbers and string formatting
-  return true;
 }
 
 function windowResized() {
