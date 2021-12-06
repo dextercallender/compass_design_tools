@@ -347,7 +347,7 @@ function repulsion() {
   let scaleVector = new p5.Vector(0,0);
   let attractionVector = new p5.Vector(0,0);
 
-  // Repulsion on full grid (broken)
+  // Repulsion on full grid 
   for (let y = 0; y < config.gridHeight; y++) {
     for (let x = 0; x < config.gridWidth; x++) {
       index = floor(config.gridWidth * y) + x;
@@ -360,11 +360,6 @@ function repulsion() {
     }
   }
 }
-
-let inpWidth;
-let inpHeight;
-let sel;
-let button;
 
 function exportGraphic() {
   if (config.exportDimesions.x === windowWidth && config.exportDimesions.y === windowHeight) {
